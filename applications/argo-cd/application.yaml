@@ -24,19 +24,19 @@ spec:
           additionalLabels:
             app: argo-cd
           revisionHistoryLimit: 3
-          affinity:
-            podAntiAffinity: soft
-            nodeAffinity:
-              type: hard
-              matchExpressions:
-                  - key: karpenter
-                    operator: In
-                    values:
-                      - enabled
-                  - key: app
-                    operator: In
-                    values:
-                      - argo-cd
+          affinity: {}
+          #  podAntiAffinity: soft
+          #  nodeAffinity:
+          #    type: hard
+          #    matchExpressions:
+          #        - key: karpenter
+          #          operator: In
+          #          values:
+          #            - enabled
+          #        - key: app
+          #          operator: In
+          #          values:
+          #            - argo-cd
 
         configs:
           cm:
