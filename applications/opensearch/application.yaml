@@ -155,8 +155,6 @@ spec:
                 app: opensearch
               name: opensearch
             spec:
-              consolidation:
-                enabled: true
               ttlSecondsAfterEmpty: 30
               ttlSecondsUntilExpired: 2592000
               labels:
