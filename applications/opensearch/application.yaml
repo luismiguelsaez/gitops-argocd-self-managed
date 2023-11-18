@@ -162,7 +162,7 @@ spec:
                 app: opensearch
               taints: []
               providerRef:
-                name: default
+                name: al2-default
               requirements:
               - key: karpenter.k8s.aws/instance-category
                 operator: In
