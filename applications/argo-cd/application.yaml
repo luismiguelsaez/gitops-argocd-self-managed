@@ -28,18 +28,6 @@ spec:
             app: argo-cd
           revisionHistoryLimit: 3
           affinity: {}
-          #  podAntiAffinity: soft
-          #  nodeAffinity:
-          #    type: hard
-          #    matchExpressions:
-          #        - key: karpenter
-          #          operator: In
-          #          values:
-          #            - enabled
-          #        - key: app
-          #          operator: In
-          #          values:
-          #            - argo-cd
 
         configs:
           cm:
@@ -63,18 +51,14 @@ spec:
                   end
                   return hs
           params:
-            # Server
             server.insecure: true
             server.disable.auth: false
-            # Application controller
             controller.status.processors: 20
             controller.operation.processors: 10
             controller.self.heal.timeout.seconds: 5
             controller.repo.server.timeout.seconds: 60
-            # ApplicationSet
             applicationsetcontroller.policy: sync
             applicationsetcontroller.enable.progressive.syncs: false
-            # Repo server
             reposerver.parallelism.limit: 0
 
         redis:
@@ -182,4 +166,42 @@ spec:
         applicationSet:
           replicas: 2
 
-        extraObjects: []
+        extraObjects:
+
+          - apiVersion: karpenter.sh/v1alpha5
+            kind: Provisioner
+            metadata:
+              labels:
+                app: argo-cd
+              name: argo-cd
+            spec:
+              consolidation:
+                enabled: true
+              labels:
+                app: argo-cd
+              providerRef:
+                name: bottlerocket-default
+              requirements: [
+                {key: karpenter.k8s.aws/instance-category, operator: In, values: [t]},
+                {key: kubernetes.io/arch, operator: In, values: [arm64]},
+                {key: karpenter.sh/capacity-type, operator: In, values: [spot]}
+              ]
+
+          - apiVersion: karpenter.sh/v1alpha5
+            kind: Provisioner
+            metadata:
+              labels:
+                app: redis
+              name: redis
+            spec:
+              consolidation:
+                enabled: true
+              labels:
+                app: redis
+              providerRef:
+                name: bottlerocket-default
+              requirements: [
+                {key: karpenter.k8s.aws/instance-category, operator: In, values: [t]},
+                {key: kubernetes.io/arch, operator: In, values: [arm64]},
+                {key: karpenter.sh/capacity-type, operator: In, values: [spot]}
+              ]
