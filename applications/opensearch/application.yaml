@@ -105,7 +105,14 @@ spec:
           size: 8Gi
 
         nodeSelector: {}
-        tolerations: []
+        tolerations:
+          - key: "karpenter"
+            operator: "Exists"
+            effect: "NoSchedule"
+          - key: "app"
+            operator: "Equal"
+            value: "opensearch"
+            effect: "NoSchedule"
 
         labels:
           app: opensearch
@@ -160,7 +167,10 @@ spec:
               labels:
                 karpenter: enabled
                 app: opensearch
-              taints: []
+              taints:
+                - key: karpenter
+                  value: enabled
+                  effect: NoSchedule
               providerRef:
                 name: al2-default
               requirements:
