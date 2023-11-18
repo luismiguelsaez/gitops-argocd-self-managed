@@ -3,6 +3,9 @@ kind: Application
 metadata:
   name: argo-cd
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   project: default
   destination:
