@@ -1,8 +1,8 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd
-  namespace: argocd     
+  name: argo-cd
+  namespace: argo-cd     
 spec:
   project: default
   destination:
@@ -19,79 +19,94 @@ spec:
     targetRevision: 5.50.1
     helm:
       releaseName: argo-cd
-    values: |
-      global:
-        additionalLabels:
-          app: argo-cd
-        revisionHistoryLimit: 3
-        affinity:
-          podAntiAffinity: soft
-          nodeAffinity:
-            type: hard
-            matchExpressions:
-                - key: karpenter
-                  operator: In
-                  values:
-                    - enabled
-                - key: app
-                  operator: In
-                  values:
-                    - argo-cd
+      values: |
+        global:
+          additionalLabels:
+            app: argo-cd
+          revisionHistoryLimit: 3
+          affinity:
+            podAntiAffinity: soft
+            nodeAffinity:
+              type: hard
+              matchExpressions:
+                  - key: karpenter
+                    operator: In
+                    values:
+                      - enabled
+                  - key: app
+                    operator: In
+                    values:
+                      - argo-cd
 
-      configs:
-        cm:
-          url: https://argocd.dev.lokalise.cloud
-          exec.enabled: true
-          admin.enabled: true
-          timeout.reconciliation: 180s
-        params:
-          # Server
-          server.insecure: true
-          server.disable.auth: false
-          # Application controller
-          controller.status.processors: 20
-          controller.operation.processors: 10
-          controller.self.heal.timeout.seconds: 5
-          controller.repo.server.timeout.seconds: 60
-          # ApplicationSet
-          applicationsetcontroller.policy: sync
-          applicationsetcontroller.enable.progressive.syncs: false
-          # Repo server
-          reposerver.parallelism.limit: 0
+        configs:
+          cm:
+            url: https://argocd.dev.lokalise.cloud
+            exec.enabled: true
+            admin.enabled: true
+            timeout.reconciliation: 180s
+          params:
+            # Server
+            server.insecure: true
+            server.disable.auth: false
+            # Application controller
+            controller.status.processors: 20
+            controller.operation.processors: 10
+            controller.self.heal.timeout.seconds: 5
+            controller.repo.server.timeout.seconds: 60
+            # ApplicationSet
+            applicationsetcontroller.policy: sync
+            applicationsetcontroller.enable.progressive.syncs: false
+            # Repo server
+            reposerver.parallelism.limit: 0
 
-      redis:
-        enabled: true
-        name: redis
-        podLabels:
-          app: redis
-        resources:
-          requests:
-            cpu: 500m
-            memory: 256Mi
-          limits:
-            cpu: 1000m
-            memory: 512Mi
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: app
-                      operator: In
-                      values:
-                        - redis
-
-      redis-ha:
-        enabled: true
-        persistentVolume:
-            enabled: false
-            storageClass: ebs
-            size: 10Gi
         redis:
-          config:
-            save: '"900 1"'
-        haproxy:
           enabled: true
+          name: redis
+          podLabels:
+            app: redis
+          resources:
+            requests:
+              cpu: 500m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - redis
+
+        redis-ha:
+          enabled: true
+          persistentVolume:
+              enabled: false
+              storageClass: ebs
+              size: 10Gi
+          redis:
+            config:
+              save: '"900 1"'
+          haproxy:
+            enabled: true
+            hardAntiAffinity: true
+            additionalAffinities:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                    - matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                            - redis
+          topologySpreadConstraints:
+            enabled: true
+            maxSkew: 1
+            topologyKey: topology.kubernetes.io/zone
+            whenUnsatisfiable: DoNotSchedule
           hardAntiAffinity: true
           additionalAffinities:
             nodeAffinity:
@@ -102,66 +117,51 @@ spec:
                         operator: In
                         values:
                           - redis
-        topologySpreadConstraints:
-          enabled: true
-          maxSkew: 1
-          topologyKey: topology.kubernetes.io/zone
-          whenUnsatisfiable: DoNotSchedule
-        hardAntiAffinity: true
-        additionalAffinities:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: app
-                      operator: In
-                      values:
-                        - redis
 
-      controller:
-        replicas: 2
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: app
-                      operator: In
-                      values:
-                        - argo-cd
+        controller:
+          replicas: 2
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - argo-cd
 
-      server:
-        autoscaling:
-          enabled: true
-          minReplicas: 2
-          maxReplicas: 4
-        ingress:
-          enabled: true
-          ingressClassName: nginx-internet-facing
-          hosts:
-            - argocd.dev.lokalise.cloud
-          paths:
-            - /
-          pathType: Prefix
-          extraPaths: []
-          tls: []
+        server:
+          autoscaling:
+            enabled: true
+            minReplicas: 2
+            maxReplicas: 4
+          ingress:
+            enabled: true
+            ingressClassName: nginx-internet-facing
+            hosts:
+              - argocd.dev.lokalise.cloud
+            paths:
+              - /
+            pathType: Prefix
+            extraPaths: []
+            tls: []
 
-      repoServer:
-        autoscaling:
-          enabled: true
-          minReplicas: 2
-          maxReplicas: 5
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: app
-                      operator: In
-                      values:
-                        - argo-cd
+        repoServer:
+          autoscaling:
+            enabled: true
+            minReplicas: 2
+            maxReplicas: 5
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - argo-cd
 
-      applicationSet:
-        replicas: 2
+        applicationSet:
+          replicas: 2
 
-      extraObjects: []
+        extraObjects: []
