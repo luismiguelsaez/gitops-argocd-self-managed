@@ -137,7 +137,7 @@ spec:
             maxReplicas: 4
           ingress:
             enabled: true
-            ingressClassName: nginx-internet-facing
+            ingressClassName: nginx-external
             hosts:
               - argocd.dev.lokalise.cloud
             paths:
