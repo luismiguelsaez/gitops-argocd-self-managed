@@ -1,0 +1,273 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-stack
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  destination:
+    namespace: prometheus-stack
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: false
+      selfHeal: true
+      allowEmpty: false
+  source:
+    chart: prometheus-stack
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 54.1.0
+    helm:
+      releaseName: prometheus-stack
+      values: |
+        nameOverride: prometheus
+        fullnameOverride: kube-prom
+        commonLabels:
+            infra/app: prometheus
+
+        extraManifests:
+
+          - apiVersion: karpenter.sh/v1alpha5
+            kind: Provisioner
+            metadata:
+              labels:
+                app: prometheus
+              name: prometheus
+            spec:
+              ttlSecondsAfterEmpty: 30
+              ttlSecondsUntilExpired: 2592000
+              labels:
+                karpenter: enabled
+                role: prometheus
+              taints:
+                - key: karpenter
+                  value: enabled
+                  effect: NoSchedule
+              providerRef:
+                name: al2-default
+              requirements: [
+                {key: karpenter.k8s.aws/instance-category, operator: In, values: [t]},
+                {key: kubernetes.io/arch, operator: In, values: [arm64]},
+                {key: karpenter.sh/capacity-type, operator: In, values: [spot]}
+              ]
+
+        prometheusOperator:
+            enabled: true
+            namespaces:
+                releaseNamespace: true
+                additional: []
+            denyNamespaces: []
+            alertmanagerInstanceNamespaces: []
+            alertmanagerConfigNamespaces: []
+            prometheusInstanceNamespaces: []
+            thanosRulerInstanceNamespaces: []
+            kubeletService:
+                enabled: true
+            labels:
+                infra/app: prometheus
+                infra/component: operator
+            podLabels:
+                infra/app: prometheus
+                infra/component: operator
+            logFormat: json
+            logLevel: info
+            nodeSelector:
+                role: system
+            serviceMonitor:
+                interval: 15s
+                scrapeTimeout: 14s
+            resources:
+                requests:
+                    cpu: 500m
+                    memory: 512Mi
+                limits:
+                    memory: 512Mi
+
+        prometheus:
+            # Thanos service configuration. Available from chart version 52.x.x
+            thanos: {}
+            #  objectStorageConfig:
+            #    existingSecret: {}
+            #      # name: ""
+            #      # key: ""
+            #    secret: {}
+            #      # type: S3
+            #      # prefix: aws
+            #      # config:
+            #      #     bucket: lokalise-prod-plat-s3-monitoring-thanos-storage
+            #      #     endpoint: s3.eu-central-1.amazonaws.com
+            #      #     aws_sdk_auth: true
+            thanosService:
+                enabled: false
+                portName: grpc
+                port: 10901
+                targetPort: thanos-grpc
+                httpPortName: http
+                httpPort: 19191
+                targetHttpPort: thanos-http
+            thanosServiceMonitor:
+                enabled: false
+            thanosServiceExternal:
+                enabled: false
+                portName: grpc
+                port: 10901
+                targetPort: thanos-grpc
+                httpPortName: http
+                httpPort: 10902
+                targetHttpPort: thanos-http
+                annotations:
+                    service.beta.kubernetes.io/aws-load-balancer-name: prod-aws-k8s-main-thanos
+                    service.beta.kubernetes.io/aws-load-balancer-type: external
+                    service.beta.kubernetes.io/aws-load-balancer-scheme: internal
+                    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: instance
+                    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+                    service.beta.kubernetes.io/load-balancer-source-ranges: 0.0.0.0/0
+                    service.beta.kubernetes.io/aws-load-balancer-manage-backend-security-group-rules: 'true'
+                    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: '300'
+                    service.beta.kubernetes.io/aws-load-balancer-attributes: load_balancing.cross_zone.enabled=true
+                    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: tcp
+                    service.beta.kubernetes.io/aws-load-balancer-healthcheck-timeout: '10'
+                    external-dns.alpha.kubernetes.io/hostname: thanos-sidecar.dev.lokalise.cloud
+
+            ingress:
+                enabled: true
+                ingressClassName: nginx-external
+                annotations: {}
+                hosts:
+                    - prometheus.dev.lokalise.cloud
+                paths:
+                    - /
+                pathType: Prefix
+
+            serviceAccount:
+                create: false
+                name: ""
+                annotations:
+                    eks.amazonaws.com/role-arn: arn:aws:iam::053497547689:role/plat-k8s-main-thanos-storage@monitoring
+                automountServiceAccountToken: true
+
+            # Prometheus server configuration
+            prometheusSpec:
+                replicas: 1
+                podMetadata:
+                    labels:
+                        infra/app: prometheus
+                        infra/component: server
+                enableAdminAPI: true
+                apiserverConfig: {}
+                retention: 7d
+                disableCompaction: true
+                nodeSelector: {}
+                externalLabels: {}
+                # Scrape config ( add selector so it doesn't scrape any pod or service monitor )
+                scrapeInterval: 15s
+                scrapeTimeout: 14s
+                ruleNamespaceSelector: {}
+                ruleSelectorNilUsesHelmValues: false
+                ruleSelector: {}
+                serviceMonitorSelectorNilUsesHelmValues: false
+                serviceMonitorSelector: {}
+                serviceMonitorNamespaceSelector: {}
+                podMonitorSelectorNilUsesHelmValues: false
+                podMonitorNamespaceSelector: {}
+                probeSelectorNilUsesHelmValues: true
+                probeSelector: {}
+                probeNamespaceSelector: {}
+
+                tolerations:
+                    - effect: NoSchedule
+                      key: platform/karpenter
+                      operator: Exists
+                affinity:
+                    nodeAffinity:
+                        requiredDuringSchedulingIgnoredDuringExecution:
+                            nodeSelectorTerms:
+                                - matchExpressions:
+                                    - key: role
+                                      operator: In
+                                      values:
+                                        - prometheus
+                    podAntiAffinity:
+                        requiredDuringSchedulingIgnoredDuringExecution:
+                            - labelSelector:
+                                matchLabels:
+                                    infra/app: prometheus
+                                    infra/component: server
+                              topologyKey: kubernetes.io/hostname
+                topologySpreadConstraints:
+                    - labelSelector:
+                        matchLabels:
+                            infra/app: prometheus
+                            infra/component: server
+                      maxSkew: 1
+                      topologyKey: topology.kubernetes.io/zone
+                      whenUnsatisfiable: DoNotSchedule
+                    - labelSelector:
+                        matchLabels:
+                            infra/app: prometheus
+                            infra/component: server
+                      maxSkew: 1
+                      topologyKey: kubernetes.io/hostname
+                      whenUnsatisfiable: DoNotSchedule
+
+                additionalScrapeConfigsSecret:
+                    enabled: false
+                    name: prometheus-scrape-config
+                    key: prometheus_scrape_config.yaml
+
+                resources:
+                    requests:
+                        cpu: 2000m
+                        memory: 32Gi
+                    limits:
+                        cpu: 2000m
+                        memory: 32Gi
+
+                storageSpec:
+                    volumeClaimTemplate:
+                        spec:
+                            storageClassName: ebs
+                            accessModes: ["ReadWriteOnce"]
+                            resources:
+                                requests:
+                                    storage: 50Gi
+
+        selfMonitor: false
+        thanosRuler:
+            enabled: false
+        defaultRules:
+            create: false
+            rules:
+                prometheus: true
+                prometheusOperator: true
+                configReloaders: true
+        kubeApiServer:
+            enabled: false
+        kubelet:
+            enabled: false
+        kubeProxy:
+            enabled: false
+        kubeDns:
+            enabled: false
+        kubeEtcd:
+            enabled: false
+        kubeControllerManager:
+            enabled: false
+        kubeScheduler:
+            enabled: false
+        kubeStateMetrics:
+            enabled: false
+        coreDns:
+            enabled: false
+        grafana:
+            enabled: false
+        alertmanager:
+            enabled: false
+        nodeExporter:
+            enabled: false
+
