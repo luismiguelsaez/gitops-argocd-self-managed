@@ -181,8 +181,9 @@ spec:
 
                 tolerations:
                     - effect: NoSchedule
-                      key: platform/karpenter
-                      operator: Exists
+                      key: karpenter
+                      operator: In
+                      value: enabled
                 affinity:
                     nodeAffinity:
                         requiredDuringSchedulingIgnoredDuringExecution:
