@@ -224,10 +224,10 @@ spec:
                 resources:
                     requests:
                         cpu: 2000m
-                        memory: 32Gi
+                        memory: 8Gi
                     limits:
                         cpu: 2000m
-                        memory: 32Gi
+                        memory: 8Gi
 
                 storageSpec:
                     volumeClaimTemplate:
