@@ -182,7 +182,7 @@ spec:
                 tolerations:
                     - effect: NoSchedule
                       key: karpenter
-                      operator: In
+                      operator: Equal
                       value: enabled
                 affinity:
                     nodeAffinity:
