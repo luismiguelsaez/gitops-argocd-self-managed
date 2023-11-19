@@ -76,8 +76,7 @@ spec:
                 infra/component: operator
             logFormat: json
             logLevel: info
-            nodeSelector:
-                role: system
+            nodeSelector: {}
             serviceMonitor:
                 interval: 15s
                 scrapeTimeout: 14s
