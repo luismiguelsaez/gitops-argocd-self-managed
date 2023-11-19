@@ -9,4 +9,4 @@ resources:
   - prometheus-stack
   
   # Wave 4 - depends on ingress/alb, prom/serviceMonitor, EBS CSI driver
-  - opensearch
+  #- opensearch
