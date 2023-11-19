@@ -1,0 +1,35 @@
+kind: AppProject
+apiVersion:  argoproj.io/v1alpha1
+metadata:
+  name: monitoring
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Monitoring project
+  sourceRepos:
+    - '*'
+  destinations:
+    - namespace: monitoring
+      server: https://kubernetes.default.svc
+    - namespace: prometheus
+      server: https://kubernetes.default.svc
+    - namespace: opensearch
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist: []
+  clusterResourceBlacklist: []
+  namespaceResourceBlacklist: []
+  namespaceResourceWhitelist: []
+  orphanedResources: {}
+  roles: []
+  syncWindows:
+    - kind: allow
+      schedule: '10 1 * * *'
+      duration: 1h
+      applications:
+        - 'prometheus-stack'
+      manualSync: true
+  sourceNamespaces:
+    - argocd
