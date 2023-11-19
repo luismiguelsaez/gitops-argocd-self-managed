@@ -182,9 +182,10 @@ spec:
               providerRef:
                 name: bottlerocket-default
               requirements: [
-                {key: karpenter.k8s.aws/instance-category, operator: In, values: [t]},
-                {key: kubernetes.io/arch, operator: In, values: [arm64]},
-                {key: karpenter.sh/capacity-type, operator: In, values: [spot]}
+                { key: karpenter.k8s.aws/instance-category, operator: In, values: [t]     },
+                { key: kubernetes.io/arch,                  operator: In, values: [arm64] },
+                { key: karpenter.sh/capacity-type,          operator: In, values: [spot]  },
+                { key: kubernetes.io/os,                    operator: In, values: [linux] }
               ]
 
           - apiVersion: karpenter.sh/v1alpha5
@@ -201,7 +202,7 @@ spec:
               providerRef:
                 name: bottlerocket-default
               requirements: [
-                {key: karpenter.k8s.aws/instance-category, operator: In, values: [t]},
-                {key: kubernetes.io/arch, operator: In, values: [arm64]},
-                {key: karpenter.sh/capacity-type, operator: In, values: [spot]}
-              ]
+                { key: karpenter.k8s.aws/instance-category, operator: In, values: [t]     },
+                { key: kubernetes.io/arch,                  operator: In, values: [arm64] },
+                { key: karpenter.sh/capacity-type,          operator: In, values: [spot]  },
+                { key: kubernetes.io/os,                    operator: In, values: [linux] }
