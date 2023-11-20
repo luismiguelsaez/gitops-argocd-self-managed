@@ -291,9 +291,7 @@ spec:
                     command: [/usr/bin/bash, -c]
                     args:
                       - |
-                        mkdir -p ~/.local/bin
-                        curl -sL https://github.com/argoproj-labs/argocd-vault-plugin/releases/download/v1.17.0/argocd-vault-plugin_1.17.0_linux_arm64 -o ~/.local/bin/argocd-vault-plugin
-                        chmod +x ~/.local/bin/argocd-vault-plugin
+                        find . -type f -name kustomization.yaml
                   generate:
                     command: [/usr/bin/bash, -c]
                     args:
