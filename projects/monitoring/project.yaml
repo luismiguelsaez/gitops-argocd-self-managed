@@ -20,12 +20,12 @@ spec:
       server: https://kubernetes.default.svc
   orphanedResources: {}
   roles: []
-  syncWindows:
-    - kind: allow
-      schedule: '10 1 * * *'
-      duration: 1h
-      applications:
-        - 'prometheus-stack'
-      manualSync: true
+  #syncWindows:
+  #  - kind: allow
+  #    schedule: '10 1 * * *'
+  #    duration: 1h
+  #    applications:
+  #      - 'prometheus-stack'
+  #    manualSync: true
   sourceNamespaces:
     - argocd
