@@ -18,10 +18,6 @@ spec:
       server: https://kubernetes.default.svc
     - namespace: opensearch
       server: https://kubernetes.default.svc
-  clusterResourceWhitelist: []
-  clusterResourceBlacklist: []
-  namespaceResourceBlacklist: []
-  namespaceResourceWhitelist: []
   orphanedResources: {}
   roles: []
   syncWindows:
