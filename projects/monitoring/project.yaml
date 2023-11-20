@@ -11,6 +11,8 @@ spec:
   description: Monitoring project
   sourceRepos:
     - '*'
+  sourceNamespaces:
+    - '*'
   destinations:
     - namespace: monitoring
       server: https://kubernetes.default.svc
@@ -27,5 +29,3 @@ spec:
   #    applications:
   #      - 'prometheus-stack'
   #    manualSync: true
-  sourceNamespaces:
-    - argocd
