@@ -174,6 +174,48 @@ spec:
             tls: []
 
         repoServer:
+
+          # CMP config - BEGIN
+          env:
+            - name: AVP_TYPE
+              value: awssecretsmanager
+          volumes:
+            - name: cmp-kustomize-aws-secretsmanager
+              configMap:
+                name: cmp-kustomize-aws-secretsmanager
+            - name: cmp-tmp
+              emptyDir: {}
+          extraContainers:
+            - name: cmp-kustomize-aws-secretsmanager
+              command:
+                - "/var/run/argocd/argocd-cmp-server"
+              args:
+                - --loglevel
+                - debug
+                - --logformat
+                - json
+              image: luismiguelsaez/argocd-cmp-default:v0.0.1
+              securityContext:
+                runAsNonRoot: true
+                runAsUser: 999
+                runAsGroup: 999
+              volumeMounts:
+                - mountPath: /var/run/argocd
+                  name: var-files
+                - mountPath: /home/argocd/cmp-server/plugins
+                  name: plugins
+                - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+                  subPath: plugin.yaml
+                  name: cmp-kustomize-aws-secretsmanager
+                - mountPath: /tmp
+                  name: cmp-tmp
+              env:
+                - name: AVP_TYPE
+                  value: awssecretsmanager
+                - name: HOME
+                  value: "/tmp"
+          # CMP config - END
+
           autoscaling:
             enabled: true
             minReplicas: 2
@@ -232,3 +274,31 @@ spec:
                 { key: karpenter.sh/capacity-type,          operator: In, values: [spot]  },
                 { key: kubernetes.io/os,                    operator: In, values: [linux] }
               ]
+
+          - apiVersion: v1
+            kind: ConfigMap
+            metadata:
+              name: cmp-kustomize-aws-secretsmanager
+            data:
+              plugin.yaml: |
+                apiVersion: argoproj.io/v1alpha1
+                kind: ConfigManagementPlugin
+                metadata:
+                  name: cmp-kustomize-aws-secretsmanager
+                spec:
+                  version: v1.0
+                  init:
+                    command: [/usr/bin/bash, -c]
+                    args:
+                      - |
+                        mkdir -p ~/.local/bin
+                        curl -sL https://github.com/argoproj-labs/argocd-vault-plugin/releases/download/v1.17.0/argocd-vault-plugin_1.17.0_linux_arm64 -o ~/.local/bin/argocd-vault-plugin
+                        chmod +x ~/.local/bin/argocd-vault-plugin
+                  generate:
+                    command: [/usr/bin/bash, -c]
+                    args:
+                      - |
+                        kustomize build . | argocd-vault-plugin generate --verbose-sensitive-output -
+                  discover:
+                    find:
+                      glob: "./**/kustomization.yaml"

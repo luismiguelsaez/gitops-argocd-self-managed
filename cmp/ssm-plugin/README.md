@@ -3,6 +3,7 @@
 ## Testing pod
 
 - Create a pod in the argocd namespace
+
 - Create a `ServiceAccount` with the role `arn:aws:iam::484308071187:role/helm-main-argocd`
 
 ```bash
@@ -25,7 +26,37 @@ spec:
     serviceAccountName: test-ssm
     containers:
         - name: test-ssm
-          image: amazon/aws-cli
+          image: luismiguelsaez/argocd-cmp-default:v0.0.1
           command: ["sleep", "infinity"]
 EOF
+```
+
+- Get secret value
+
+```bash
+aws secretsmanager get-secret-value --secret-id /eks/cluster/main/iam/roles/karpenter
+```
+
+- Test Vault plugin ( https://argocd-vault-plugin.readthedocs.io/en/stable )
+
+```bash
+curl -sL https://github.com/argoproj-labs/argocd-vault-plugin/releases/download/v1.17.0/argocd-vault-plugin_1.17.0_linux_arm64 -o argocd-vault-plugin
+chmod +x argocd-vault-plugin
+```
+
+```yaml
+cat <<EOF > secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: aws-example
+stringData:
+  sample-secret: <path:/eks/cluster/main/iam/roles/system#karpenter#AWSCURRENT>
+type: Opaque
+EOF
+```
+
+```bash
+export AVP_TYPE=awssecretsmanager
+cat secret.yaml | AVP_TYPE=awssecretsmanager ./argocd-vault-plugin generate --verbose-sensitive-output -
 ```
