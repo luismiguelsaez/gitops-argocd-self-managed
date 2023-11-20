@@ -178,7 +178,8 @@ spec:
           serviceAccount:
             create: true
             annotations:
-              eks.amazonaws.com/role-arn: arn:aws:iam::484308071187:role/helm-main-argocd
+              #eks.amazonaws.com/role-arn: arn:aws:iam::484308071187:role/helm-main-argocd
+              eks.amazonaws.con/role-arn: <path:/eks/cluster/main/iam/roles/system#karpenter#AWSCURRENT>
             automountServiceAccountToken: true
 
           # CMP config - BEGIN
