@@ -175,6 +175,12 @@ spec:
 
         repoServer:
 
+          serviceAccount:
+            create: true
+            annotations:
+              eks.amazonaws.com/role-arn: arn:aws:iam::484308071187:role/helm-main-argocd
+            automountServiceAccountToken: true
+
           # CMP config - BEGIN
           env:
             - name: AVP_TYPE
@@ -220,6 +226,7 @@ spec:
             enabled: true
             minReplicas: 2
             maxReplicas: 5
+
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
