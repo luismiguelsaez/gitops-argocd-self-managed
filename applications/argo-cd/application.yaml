@@ -288,12 +288,12 @@ spec:
                 spec:
                   version: v1.0
                   init:
-                    command: [/usr/bin/bash, -c]
+                    command: [/bin/bash, -c]
                     args:
                       - |
                         find . -type f -name kustomization.yaml
                   generate:
-                    command: [/usr/bin/bash, -c]
+                    command: [/bin/bash, -c]
                     args:
                       - |
                         kustomize build . | argocd-vault-plugin generate --verbose-sensitive-output -
