@@ -16,6 +16,16 @@ spec:
       prune: false
       selfHeal: true
       allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - Validate=true
+      - RespectIgnoreDifferences=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 1m
   source:
     chart: argo-cd
     repoURL: https://argoproj.github.io/argo-helm
@@ -50,6 +60,21 @@ spec:
                     end
                   end
                   return hs
+            # Old format
+            #resource.customizations.health.argoproj.io_Application: |
+            #  hs = {}
+            #  hs.status = "Progressing"
+            #  hs.message = ""
+            #  if obj.status ~= nil then
+            #    if obj.status.health ~= nil then
+            #      hs.status = obj.status.health.status
+            #      if obj.status.health.message ~= nil then
+            #        hs.message = obj.status.health.message
+            #      end
+            #    end
+            #  end
+            #  hs.message = "Waiting for Application"
+            #  return hs
           params:
             server.insecure: true
             server.disable.auth: false

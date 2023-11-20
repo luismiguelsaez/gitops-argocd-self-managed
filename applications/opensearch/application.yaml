@@ -12,12 +12,20 @@ spec:
     namespace: opensearch
     server: https://kubernetes.default.svc
   syncPolicy:
-    syncOptions:
-      - CreateNamespace=true
     automated:
       prune: false
       selfHeal: true
       allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - Validate=true
+      - RespectIgnoreDifferences=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 1m
   source:
     chart: opensearch
     repoURL: https://opensearch-project.github.io/helm-charts
