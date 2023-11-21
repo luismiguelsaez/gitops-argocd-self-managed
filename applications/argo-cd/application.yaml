@@ -44,7 +44,7 @@ spec:
             url: https://argocd.dev.lokalise.cloud
             exec.enabled: true
             admin.enabled: true
-            timeout.reconciliation: 180s
+            timeout.reconciliation: 60s
             resource.customizations: |
               argoproj.io/Application:
                 health.lua: |
