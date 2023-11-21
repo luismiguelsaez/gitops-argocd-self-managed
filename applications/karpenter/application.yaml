@@ -11,7 +11,7 @@ metadata:
 spec:
   project: system
   destination:
-    namespace: karpenter
+    namespace: cloud-controllers
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:

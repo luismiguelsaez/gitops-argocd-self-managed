@@ -20,7 +20,7 @@ spec:
   sourceNamespaces:
     - argocd
   destinations:
-    - namespace: karpenter
+    - namespace: cloud-controllers
       server: https://kubernetes.default.svc
     - namespace: kube-node-lease
       server: https://kubernetes.default.svc
