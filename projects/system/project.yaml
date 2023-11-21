@@ -1,0 +1,34 @@
+kind: AppProject
+apiVersion:  argoproj.io/v1alpha1
+metadata:
+  name: system
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  description: System applications project
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  sourceRepos:
+    - '*'
+  sourceNamespaces:
+    - argocd
+  destinations:
+    - namespace: karpenter
+      server: https://kubernetes.default.svc
+  orphanedResources:
+    warn: true
+  roles: []
+  #syncWindows:
+  #  - kind: allow
+  #    schedule: '10 1 * * *'
+  #    duration: 1h
+  #    applications:
+  #      - 'prometheus-stack'
+  #    manualSync: true

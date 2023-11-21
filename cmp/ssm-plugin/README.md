@@ -51,12 +51,25 @@ kind: Secret
 metadata:
   name: aws-example
 stringData:
-  sample-secret: <path:/eks/cluster/main/iam/roles/system#karpenter#AWSCURRENT>
+  sample-secret: <path:/eks/cluster/main/iam/roles#karpenter#AWSCURRENT>
 type: Opaque
+EOF
+```
+
+```yaml
+cat <<EOF > serviceaccount.yaml
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  annotations:
+    eks.amazonaws.con/role-arn: '<path:/eks/cluster/main/iam/roles#argocd#AWSCURRENT>'
+  name: argo-cd-argocd-repo-server
+  namespace: argocd
 EOF
 ```
 
 ```bash
 export AVP_TYPE=awssecretsmanager
-cat secret.yaml | AVP_TYPE=awssecretsmanager ./argocd-vault-plugin generate --verbose-sensitive-output -
+cat serviceaccount.yaml | argocd-vault-plugin generate --verbose-sensitive-output -
 ```

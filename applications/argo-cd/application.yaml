@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-options: Prune=false
-    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   project: default
   destination:
@@ -296,12 +296,12 @@ spec:
                 spec:
                   version: v1.0
                   init:
-                    command: [/bin/bash, -c]
+                    command: [sh, -c]
                     args:
                       - |
                         find . -type f -name kustomization.yaml
                   generate:
-                    command: [/bin/bash, -c]
+                    command: [sh, -c]
                     args:
                       - |
                         kustomize build . | argocd-vault-plugin generate --verbose-sensitive-output -

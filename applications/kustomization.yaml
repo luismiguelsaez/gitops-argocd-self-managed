@@ -2,11 +2,14 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  # Wave 0
+  # Wave 0 - creates basic CRDs
+  - karpenter # Used by other workloads to provision nodes
+
+  # Wave 1 - depends on karpenter provisioners and node templates
+  #- prometheus-stack # Creates ServiceMonitor, PodMonitor, ... used by other workloads
+
+  # Wave 3
   - argo-cd
 
-  # Wave 1
-  #- prometheus-stack
-  
   # Wave 4 - depends on ingress/alb, prom/serviceMonitor, EBS CSI driver
   #- opensearch
