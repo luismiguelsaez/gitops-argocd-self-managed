@@ -4,6 +4,8 @@ kind: Kustomization
 resources:
   # Wave 0 - creates basic CRDs
   - karpenter # Used by other workloads to provision nodes
+  - cluster-autoscaler
+  - aws-load-balancer-controller
 
   # Wave 1 - depends on karpenter provisioners and node templates
   #- prometheus-stack # Creates ServiceMonitor, PodMonitor, ... used by other workloads

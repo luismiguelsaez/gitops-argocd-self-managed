@@ -24,11 +24,11 @@ spec:
       - RespectIgnoreDifferences=true
       - ServerSideApply=true
     retry:
-      limit: 3
+      limit: 10
       backoff:
         duration: 5s
         factor: 2
-        maxDuration: 1m
+        maxDuration: 5m
   source:
     chart: kube-prometheus-stack
     repoURL: https://prometheus-community.github.io/helm-charts

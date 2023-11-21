@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-autoscaler
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=true
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: system
+  destination:
+    namespace: cloud-controllers
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - Validate=true
+      - RespectIgnoreDifferences=true
+      - ServerSideApply=false
+    retry:
+      limit: 10
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 5m
+  source:
+    chart: cluster-autoscaler
+    repoURL: https://kubernetes.github.io/autoscaler 
+    targetRevision: 9.32.0
+    helm:
+      releaseName: cluster-autoscaler
+      values: |
+        {
+            "clusterName": <path:/eks/cluster/main/info#name#AWSCURRENT>,
+            "region": <path:/eks/cluster/main/info#region#AWSCURRENT>,
+            "serviceAccount": {
+                "create": True,
+                "annotations": {
+                    "eks.amazonaws.com/role-arn": <path:/eks/cluster/main/iam/roles#aws_load_balancer_controller#AWSCURRENT>,
+                }
+            },
+        }
