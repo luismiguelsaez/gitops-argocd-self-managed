@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd-apps
+  name: argo-cd
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
   annotations:
     argocd.argoproj.io/sync-options: Prune=false
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   project: default
   destination:
@@ -29,41 +29,320 @@ spec:
         factor: 2
         maxDuration: 5m
   source:
-    chart: argocd-apps
+    chart: argo-cd
     repoURL: https://argoproj.github.io/argo-helm
-    targetRevision: 1.4.1
+    targetRevision: 5.51.4
     helm:
-      releaseName: argocd-apps
+      releaseName: argo-cd
       values: |
-          applications:
-              - name: root
-                namespace: argocd
-                additionalLabels: {}
-                additionalAnnotations: {}
-                finalizers:
-                  - resources-finalizer.argocd.argoproj.io
-                project: default
-                source:
-                    repoURL": https://github.com/luismiguelsaez/gitops-argocd-self-managed
-                    targetRevision: HEAD
-                    path: .
-                    plugin: {}
-                destination:
-                    server: https://kubernetes.default.svc
-                    namespace": argocd
-                syncPolicy:
-                    automated:
-                        prune: false
-                        selfHeal: true
-                    syncOptions:
-                        - Validate=true
-                        - CreateNamespace=true
-                        - RespectIgnoreDifferences=true
-                    retry: {
-                        limit: 10
-                        backoff:
-                            duration: 5s
-                            factor: 2
-                            maxDuration: 2m
-                revisionHistoryLimit: 10
-                ignoreDifferences: []
+        global:
+          additionalLabels:
+            app: argo-cd
+          revisionHistoryLimit: 3
+          affinity: {}
+
+        configs:
+          cm:
+            url: https://argocd<path:/eks/cluster/main/info/ingress#external_domain#AWSCURRENT>
+            exec.enabled: true
+            admin.enabled: true
+            timeout.reconciliation: 60s
+            resource.customizations: |
+              argoproj.io/Application:
+                health.lua: |
+                  hs = {}
+                  hs.status = "Progressing"
+                  hs.message = ""
+                  if obj.status ~= nil then
+                    if obj.status.health ~= nil then
+                      hs.status = obj.status.health.status
+                      if obj.status.health.message ~= nil then
+                        hs.message = obj.status.health.message
+                      end
+                    end
+                  end
+                  return hs
+            # Old format
+            #resource.customizations.health.argoproj.io_Application: |
+            #  hs = {}
+            #  hs.status = "Progressing"
+            #  hs.message = ""
+            #  if obj.status ~= nil then
+            #    if obj.status.health ~= nil then
+            #      hs.status = obj.status.health.status
+            #      if obj.status.health.message ~= nil then
+            #        hs.message = obj.status.health.message
+            #      end
+            #    end
+            #  end
+            #  hs.message = "Waiting for Application"
+            #  return hs
+          params:
+            server.insecure: true
+            server.disable.auth: false
+            controller.status.processors: 20
+            controller.operation.processors: 10
+            controller.self.heal.timeout.seconds: 5
+            controller.repo.server.timeout.seconds: 60
+            applicationsetcontroller.policy: sync
+            applicationsetcontroller.enable.progressive.syncs: false
+            reposerver.parallelism.limit: 0
+
+        redis:
+          enabled: true
+          name: redis
+          podLabels:
+            app: redis
+          resources:
+            requests:
+              cpu: 500m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - redis
+
+        redis-ha:
+          enabled: true
+          persistentVolume:
+              enabled: false
+              storageClass: ebs
+              size: 10Gi
+          redis:
+            config:
+              save: '"900 1"'
+          haproxy:
+            enabled: true
+            hardAntiAffinity: true
+            additionalAffinities:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                    - matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                            - redis
+          topologySpreadConstraints:
+            enabled: true
+            maxSkew: 1
+            topologyKey: topology.kubernetes.io/zone
+            whenUnsatisfiable: DoNotSchedule
+          hardAntiAffinity: true
+          additionalAffinities:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - redis
+
+        controller:
+          replicas: 2
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - argo-cd
+
+        server:
+          autoscaling:
+            enabled: true
+            minReplicas: 2
+            maxReplicas: 4
+          ingress:
+            enabled: true
+            ingressClassName: nginx-external
+            hosts:
+              - argocd<path:/eks/cluster/main/info/ingress#external_domain#AWSCURRENT>
+            paths:
+              - /
+            pathType: Prefix
+            extraPaths: []
+            tls: []
+
+        repoServer:
+
+          serviceAccount:
+            create: true
+            annotations:
+              eks.amazonaws.con/role-arn: <path:/eks/cluster/main/info/iam/roles#argocd#AWSCURRENT>
+            automountServiceAccountToken: true
+
+          # CMP config - BEGIN
+          volumes:
+            - name: cmp-kustomize-aws-secretsmanager
+              configMap:
+                name: cmp-kustomize-aws-secretsmanager
+            - name: cmp-tmp
+              emptyDir: {}
+          extraContainers:
+            - name: cmp-kustomize-aws-secretsmanager
+              command:
+                - "/var/run/argocd/argocd-cmp-server"
+              args:
+                - --loglevel
+                - debug
+                - --logformat
+                - json
+              image: luismiguelsaez/argocd-cmp-default:v0.0.2
+              securityContext:
+                runAsNonRoot: true
+                runAsUser: 999
+                runAsGroup: 999
+              volumeMounts:
+                - mountPath: /var/run/argocd
+                  name: var-files
+                - mountPath: /home/argocd/cmp-server/plugins
+                  name: plugins
+                - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+                  subPath: plugin.yaml
+                  name: cmp-kustomize-aws-secretsmanager
+                - mountPath: /tmp
+                  name: cmp-tmp
+              env:
+                - name: AVP_TYPE
+                  value: awssecretsmanager
+                - name: HOME
+                  value: /tmp
+          # CMP config - END
+
+          autoscaling:
+            enabled: true
+            minReplicas: 2
+            maxReplicas: 5
+
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - argo-cd
+
+        applicationSet:
+          replicas: 2
+
+        extraObjects:
+
+          - apiVersion: karpenter.sh/v1alpha5
+            kind: Provisioner
+            metadata:
+              labels:
+                app: argo-cd
+              name: argo-cd
+            spec:
+              consolidation:
+                enabled: true
+              labels:
+                app: argo-cd
+              providerRef:
+                name: bottlerocket-default
+              requirements: [
+                { key: karpenter.k8s.aws/instance-category, operator: In, values: [t]     },
+                { key: kubernetes.io/arch,                  operator: In, values: [arm64] },
+                { key: karpenter.sh/capacity-type,          operator: In, values: [spot]  },
+                { key: kubernetes.io/os,                    operator: In, values: [linux] }
+              ]
+
+          - apiVersion: karpenter.sh/v1alpha5
+            kind: Provisioner
+            metadata:
+              labels:
+                app: redis
+              name: redis
+            spec:
+              consolidation:
+                enabled: true
+              labels:
+                app: redis
+              providerRef:
+                name: bottlerocket-default
+              requirements: [
+                { key: karpenter.k8s.aws/instance-category, operator: In, values: [t]     },
+                { key: kubernetes.io/arch,                  operator: In, values: [arm64] },
+                { key: karpenter.sh/capacity-type,          operator: In, values: [spot]  },
+                { key: kubernetes.io/os,                    operator: In, values: [linux] }
+              ]
+
+          - apiVersion: v1
+            kind: ConfigMap
+            metadata:
+              name: cmp-kustomize-aws-secretsmanager
+            data:
+              plugin.yaml: |
+                apiVersion: argoproj.io/v1alpha1
+                kind: ConfigManagementPlugin
+                metadata:
+                  name: cmp-kustomize-aws-secretsmanager
+                spec:
+                  version: v1.0
+                  init:
+                    command: [sh, -c]
+                    args:
+                      - |
+                        find . -type f -name kustomization.yaml
+                  generate:
+                    command: [sh, -c]
+                    args:
+                      - |
+                        kustomize build . | argocd-vault-plugin generate --verbose-sensitive-output -
+                  discover:
+                    find:
+                      glob: "./**/kustomization.yaml"
+
+          - apiVersion: v1
+            kind: ConfigMap
+            metadata:
+              name: cmp-helm-aws-secretsmanager
+            data:
+              plugin.yaml: |
+                apiVersion: argoproj.io/v1alpha1
+                kind: ConfigManagementPlugin
+                metadata:
+                  name: cmp-helm-aws-secretsmanager
+                spec:
+                  version: v1.0
+                  init:
+                    command: [/usr/bin/bash, -c]
+                    args:
+                      - |
+                        helm_repos=$(helm dependencies list | tail -n +2 | awk '{print $3}' | sort | uniq);
+                        for repo in $helm_repos; do [ -n "$repo" ] && helm repo add $RANDOM $repo; done
+                        rm Chart.lock
+                        helm dependency build
+                  generate:
+                    command: [/usr/bin/bash, -c]
+                    args:
+                      - |
+                        export HELM_INCLUDE_CRDS="--include-crds";
+                        export HELM_EXTRA_PARAMS="";
+                        if [ -n "$ARGOCD_ENV_HELM_SKIP_CRDS" ]; then
+                          export HELM_INCLUDE_CRDS="";
+                        fi;
+                        if [ -n "$ARGOCD_ENV_HELM_EXTRA_PARAMS" ]; then
+                          export HELM_EXTRA_PARAMS="$ARGOCD_ENV_HELM_EXTRA_PARAMS";
+                        fi;
+                        echo "$ARGOCD_ENV_HELM_VALUES" > values-env.yaml;
+                        echo "$ARGOCD_ENV_HELM_VALUES_OVERRIDE" > values-env-override.yaml;
+                        helm template $ARGOCD_APP_NAME $HELM_INCLUDE_CRDS $HELM_EXTRA_PARAMS -n $ARGOCD_APP_NAMESPACE -f values-env.yaml -f values-env-override.yaml . |\
+                        argocd-vault-plugin generate - --verbose-sensitive-output
+                  discover:
+                    find:
+                      glob: "./**/Chart.yaml"
