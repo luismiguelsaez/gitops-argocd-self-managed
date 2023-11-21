@@ -1,5 +1,9 @@
 # SSM Plugin
 
+## Info
+
+- Docker image code: https://github.com/luismiguelsaez/docker-playground/tree/main/argocd/cmp
+
 ## Testing pod
 
 - Create a pod in the argocd namespace
