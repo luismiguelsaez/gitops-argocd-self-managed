@@ -166,7 +166,7 @@ spec:
             enabled: true
             ingressClassName: nginx-external
             hosts:
-              - argocd.dev.lokalise.cloud
+              - argocd"<path:/eks/cluster/main/ingress#external_domain#AWSCURRENT>"
             paths:
               - /
             pathType: Prefix
