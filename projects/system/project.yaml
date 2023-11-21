@@ -22,6 +22,10 @@ spec:
   destinations:
     - namespace: karpenter
       server: https://kubernetes.default.svc
+    - namespace: kube-node-lease
+      server: https://kubernetes.default.svc
+    - namespace: kube-system
+      server: https://kubernetes.default.svc
   orphanedResources:
     warn: true
   roles: []
