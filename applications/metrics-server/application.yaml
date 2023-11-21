@@ -11,7 +11,7 @@ metadata:
 spec:
   project: system
   destination:
-    namespace: cloud-controllers
+    namespace: kube-system
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
