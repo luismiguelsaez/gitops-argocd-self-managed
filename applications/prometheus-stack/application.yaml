@@ -250,7 +250,7 @@ spec:
                                     storage: 50Gi
 
         grafana:
-            enabled: false
+            enabled: true
             ingress:
                 enabled: true
                 ingressClassName: nginx-external
