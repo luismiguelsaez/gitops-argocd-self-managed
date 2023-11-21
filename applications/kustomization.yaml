@@ -6,6 +6,8 @@ resources:
   - karpenter # Used by other workloads to provision nodes
   - cluster-autoscaler
   - aws-load-balancer-controller
+  - aws-ebs-csi-driver
+  - external-dns
 
   # Wave 1 - depends on karpenter provisioners and node templates
   #- prometheus-stack # Creates ServiceMonitor, PodMonitor, ... used by other workloads
