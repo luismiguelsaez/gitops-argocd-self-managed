@@ -11,10 +11,10 @@ resources:
   - metrics-server
 
   # Wave 1 - depends on karpenter provisioners and node templates
-  #- prometheus-stack # Creates ServiceMonitor, PodMonitor, ... used by other workloads
+  - prometheus-stack # Creates ServiceMonitor, PodMonitor, ... used by other workloads
 
   # Wave 3
   - argo-cd
 
   # Wave 4 - depends on ingress/alb, prom/serviceMonitor, EBS CSI driver
-  #- opensearch
+  - opensearch
