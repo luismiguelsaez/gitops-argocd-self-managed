@@ -26,9 +26,9 @@ spec:
     httpPutResponseHopLimit: 2
     httpTokens: required
   securityGroupSelector:
-    kubernetes.io/cluster/<path:/eks/cluster/main/info/details#name#AWSCURRENT>: owned
+    kubernetes.io/cluster/<path:/eks/cluster/main/data-2/details#name#AWSCURRENT>: owned
   subnetSelector:
-    karpenter.sh/discovery: <path:/eks/cluster/main/info/details#name#AWSCURRENT>
+    karpenter.sh/discovery: <path:/eks/cluster/main/data-2/details#name#AWSCURRENT>
   userData: |-
     [settings.kubernetes.eviction-hard]
     "memory.available" = "12%"

@@ -163,7 +163,7 @@ spec:
           enabled: true
           ingressClassName: nginx-external
           hosts:
-            - opensearch<path:/eks/cluster/main/info/ingress#external_domain#AWSCURRENT>
+            - opensearch<path:/eks/cluster/main/data-2/ingress#external_domain#AWSCURRENT>
           path: /
           tls: []
 

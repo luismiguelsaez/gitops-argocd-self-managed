@@ -39,15 +39,15 @@ spec:
       values: |
         {
             "autoDiscovery": {
-                "clusterName": <path:/eks/cluster/main/info/details#name#AWSCURRENT>,
+                "clusterName": <path:/eks/cluster/main/data-2/details#name#AWSCURRENT>,
             },
-            "awsRegion": <path:/eks/cluster/main/info/details#region#AWSCURRENT>,
+            "awsRegion": <path:/eks/cluster/main/data-2/details#region#AWSCURRENT>,
             "rbac": {
                 "create": True,
                 "serviceAccount": {
                     "create": True,
                     "annotations": {
-                        "eks.amazonaws.com/role-arn": <path:/eks/cluster/main/info/iam/roles#karpenter#AWSCURRENT>,
+                        "eks.amazonaws.com/role-arn": <path:/eks/cluster/main/data-2/iam/roles#karpenter#AWSCURRENT>,
                     }
                 },
             },

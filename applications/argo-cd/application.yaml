@@ -43,7 +43,7 @@ spec:
 
         configs:
           cm:
-            url: https://argocd<path:/eks/cluster/main/info/ingress#external_domain#AWSCURRENT>
+            url: https://argocd<path:/eks/cluster/main/data-2/ingress#external_domain#AWSCURRENT>
             exec.enabled: true
             admin.enabled: true
             timeout.reconciliation: 60s
@@ -168,7 +168,7 @@ spec:
             enabled: true
             ingressClassName: nginx-external
             hosts:
-              - argocd<path:/eks/cluster/main/info/ingress#external_domain#AWSCURRENT>
+              - argocd<path:/eks/cluster/main/data-2/ingress#external_domain#AWSCURRENT>
             paths:
               - /
             pathType: Prefix
@@ -180,7 +180,7 @@ spec:
           serviceAccount:
             create: true
             annotations:
-              eks.amazonaws.con/role-arn: <path:/eks/cluster/main/info/iam/roles#argocd#AWSCURRENT>
+              eks.amazonaws.con/role-arn: <path:/eks/cluster/main/data-2/iam/roles#argocd#AWSCURRENT>
             automountServiceAccountToken: true
 
           # CMP config - BEGIN
