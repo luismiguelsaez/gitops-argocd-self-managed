@@ -37,12 +37,12 @@ spec:
       releaseName: aws-load-balancer-controller
       values: |
         {
-            "clusterName": <path:/eks/cluster/main/info#name#AWSCURRENT>,
-            "region": <path:/eks/cluster/main/info#region#AWSCURRENT>,
+            "clusterName": <path:/eks/cluster/main/info/details#name#AWSCURRENT>,
+            "region": <path:/eks/cluster/main/info/details#region#AWSCURRENT>,
             "serviceAccount": {
                 "create": True,
                 "annotations": {
-                    "eks.amazonaws.com/role-arn": <path:/eks/cluster/main/iam/roles#aws_load_balancer_controller#AWSCURRENT>,
+                    "eks.amazonaws.com/role-arn": <path:/eks/cluster/main/info/iam/roles#aws_load_balancer_controller#AWSCURRENT>,
                 }
             },
         }
