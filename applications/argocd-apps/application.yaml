@@ -44,13 +44,13 @@ spec:
                   - resources-finalizer.argocd.argoproj.io
                 project: default
                 source:
-                    repoURL": https://github.com/luismiguelsaez/gitops-argocd-self-managed
+                    repoURL: https://github.com/luismiguelsaez/gitops-argocd-self-managed
                     targetRevision: HEAD
                     path: .
                     plugin: {}
                 destination:
                     server: https://kubernetes.default.svc
-                    namespace": argocd
+                    namespace: argocd
                 syncPolicy:
                     automated:
                         prune: false
