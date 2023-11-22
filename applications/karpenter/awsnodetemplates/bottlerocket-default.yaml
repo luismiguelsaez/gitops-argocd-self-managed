@@ -26,7 +26,7 @@ spec:
     httpPutResponseHopLimit: 2
     httpTokens: required
   securityGroupSelector:
-    aws-ids: <path:/eks/cluster/main/data-2/details#name#AWSCURRENT>
+    #aws-ids: <path:/eks/cluster/main/data-2/details#name#AWSCURRENT>
     #aws:eks:cluster-name: <path:/eks/cluster/main/data-2/details#name#AWSCURRENT>
     #karpenter.sh/discovery: <path:/eks/cluster/main/data-2/details#name#AWSCURRENT>
     #kubernetes.io/cluster/<path:/eks/cluster/main/data-2/details#name#AWSCURRENT>: owned
