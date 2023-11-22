@@ -59,7 +59,7 @@ spec:
                         - Validate=true
                         - CreateNamespace=true
                         - RespectIgnoreDifferences=true
-                    retry: {
+                    retry:
                         limit: 10
                         backoff:
                             duration: 5s
