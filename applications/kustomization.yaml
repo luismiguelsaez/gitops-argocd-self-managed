@@ -13,7 +13,7 @@ resources:
 
   # Wave 1 - depends on karpenter provisioners and node templates
   - karpenter/awsnodetemplates
-  - prometheus-stack # Creates ServiceMonitor, PodMonitor, ... used by other workloads
+  #- prometheus-stack # Creates ServiceMonitor, PodMonitor, ... used by other workloads
   #- ingress/nginx/external
 
   # Wave 3
