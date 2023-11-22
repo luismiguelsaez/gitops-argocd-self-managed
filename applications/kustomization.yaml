@@ -9,7 +9,7 @@ resources:
   - aws-ebs-csi-driver
   - external-dns
   - metrics-server
-  - argocd-apps
+  #- argocd-apps # This would create a sync loop, not doing it
 
   # Wave 1 - depends on karpenter provisioners and node templates
   - karpenter/awsnodetemplates

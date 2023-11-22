@@ -6,7 +6,6 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
   annotations:
-    argocd.argoproj.io/sync-options: Prune=true
     argocd.argoproj.io/sync-wave: "4"
 spec:
   project: monitoring
