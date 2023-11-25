@@ -9,12 +9,11 @@ resources:
   - aws-ebs-csi-driver
   - external-dns
   - metrics-server
-  #- argocd-apps # This would create a sync loop, not doing it
 
   # Wave 1 - depends on karpenter provisioners and node templates
   - karpenter/awsnodetemplates
   - karpenter/provisioners
-  #- prometheus-stack # Creates ServiceMonitor, PodMonitor, ... used by other workloads
+  - prometheus-stack # Creates ServiceMonitor, PodMonitor, ... used by other workloads
   - ingress/nginx/external
 
   # Wave 3
