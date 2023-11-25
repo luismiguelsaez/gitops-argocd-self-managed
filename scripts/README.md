@@ -17,6 +17,12 @@ argocd context dev
 argocd app get root -o json | jq -r '.status.sync.status'
 ```
 
+- Destroy infra
+
+```bash
+argocd app delete --cascade --propagation-policy foreground root
+```
+
 ## Kubernetes resources
 
 - Get nodes
