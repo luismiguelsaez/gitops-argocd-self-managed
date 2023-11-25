@@ -6,7 +6,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
     argocd.argoproj.io/sync-options: Prune=true
-  name: prometheus
+  name: cronjob
 spec:
   consolidation:
     enabled: true
