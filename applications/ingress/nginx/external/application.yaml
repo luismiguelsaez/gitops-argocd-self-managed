@@ -8,7 +8,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 spec:
-  project: system
+  project: ingress
   destination:
     namespace: ingress
     server: https://kubernetes.default.svc
