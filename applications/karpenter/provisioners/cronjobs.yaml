@@ -11,14 +11,14 @@ spec:
   consolidation:
     enabled: true
   labels:
-    app: prometheus
+    role: cronjob
   providerRef:
     name: bottlerocket-default
   requirements:
   - key: karpenter.k8s.aws/instance-category
     operator: In
     values:
-    - t
+    - c
   - key: kubernetes.io/arch
     operator: In
     values:
