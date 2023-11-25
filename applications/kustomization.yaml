@@ -17,7 +17,7 @@ resources:
   #- ingress/nginx/external
 
   # Wave 3
-  - argo-cd
+  #- argo-cd
 
   # Wave 4 - depends on ingress/alb, prom/serviceMonitor, EBS CSI driver
   #- opensearch
