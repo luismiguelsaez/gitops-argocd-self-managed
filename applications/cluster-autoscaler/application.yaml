@@ -35,9 +35,14 @@ spec:
     helm:
       releaseName: cluster-autoscaler
       values: |
-        clusterName: <path:/eks/cluster/20231126/main/details#name#AWSCURRENT>
-        region: <path:/eks/cluster/20231126/main/details#region#AWSCURRENT>
-        serviceAccount:
-          create: true
-          annotations:
-            eks.amazonaws.com/role-arn: <path:/eks/cluster/20231126/main/iam/roles#aws_load_balancer_controller#AWSCURRENT>
+        replicaCount: 2
+        autoDiscovery:
+          clusterName: <path:/eks/cluster/20231126/main/details#name#AWSCURRENT>
+          roles:
+            - worker
+        awsRegion: <path:/eks/cluster/20231126/main/details#region#AWSCURRENT>
+        rbac:
+          serviceAccount:
+            create: true
+            annotations:
+              eks.amazonaws.com/role-arn: <path:/eks/cluster/20231126/main/iam/roles#cluster_autoscaler#AWSCURRENT>
