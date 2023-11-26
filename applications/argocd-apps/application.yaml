@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: argocd-apps
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
@@ -39,8 +37,6 @@ spec:
                 namespace: argocd
                 additionalLabels: {}
                 additionalAnnotations: {}
-                finalizers:
-                  - resources-finalizer.argocd.argoproj.io
                 project: default
                 source:
                     repoURL: https://github.com/luismiguelsaez/gitops-argocd-self-managed
