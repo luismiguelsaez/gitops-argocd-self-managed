@@ -37,21 +37,16 @@ spec:
       releaseName: karpenter
       values: |
         {
-            "autoDiscovery": {
-                "clusterName": <path:/eks/cluster/20231126/main/details#name#AWSCURRENT>,
+            "replicas": 2,
+            "settings": {
+                "aws": {},
+                "clusterName": "<path:/eks/cluster/20231126/main/details#name#AWSCURRENT>",
+                "clusterEndpoint": "<path:/eks/cluster/20231126/main/details#endpoint#AWSCURRENT>"",
             },
-            "awsRegion": <path:/eks/cluster/20231126/main/details#region#AWSCURRENT>,
-            "rbac": {
+            "serviceAccount": {
                 "create": True,
-                "serviceAccount": {
-                    "create": True,
-                    "annotations": {
-                        "eks.amazonaws.com/role-arn": <path:/eks/cluster/20231126/main/iam/roles#karpenter#AWSCURRENT>,
-                    }
-                },
-            },
-            "extraArgs": {
-                "balance-similar-node-groups": True,
-                "skip-nodes-with-system-pods": False,
+                "annotations": {
+                    "eks.amazonaws.com/role-arn": <path:/eks/cluster/20231126/main/iam/roles#karpenter#AWSCURRENT>,
+                }
             },
         },
