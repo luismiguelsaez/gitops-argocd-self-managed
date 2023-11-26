@@ -12,6 +12,10 @@ spec:
     enabled: true
   labels:
     role: cronjob
+  taints:
+    - key: karpenter.sh/enabled
+      value: "true"
+      effect: NoSchedule
   providerRef:
     name: bottlerocket-default
   requirements:
