@@ -42,12 +42,12 @@ spec:
             "deploymentStrategy": {
                 "type": "Recreate",
             },
-            "txtOwnerId": external-dns-<path:/eks/cluster/main/secrets/details#name#AWSCURRENT>, 
+            "txtOwnerId": external-dns-<path:/eks/cluster/main/details#name#AWSCURRENT>, 
             "txtSuffix": "",
             "serviceAccount": {
                 "create": True,
                 "annotations": {
-                    "eks.amazonaws.com/role-arn": <path:/eks/cluster/main/secrets/iam/roles#external_dns#AWSCURRENT>,
+                    "eks.amazonaws.com/role-arn": <path:/eks/cluster/main/iam/roles#external_dns#AWSCURRENT>,
                 },
             }
         }

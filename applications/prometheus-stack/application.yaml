@@ -149,7 +149,7 @@ spec:
                 ingressClassName: nginx-external
                 annotations: {}
                 hosts:
-                    - prometheus<path:/eks/cluster/main/secrets/ingress#external_domain#AWSCURRENT>
+                    - prometheus<path:/eks/cluster/main/ingress#external_domain#AWSCURRENT>
                 paths:
                     - /
                 pathType: Prefix
@@ -255,7 +255,7 @@ spec:
                 ingressClassName: nginx-external
                 annotations: {}
                 hosts:
-                    - grafana<path:/eks/cluster/main/secrets/ingress#external_domain#AWSCURRENT>
+                    - grafana<path:/eks/cluster/main/ingress#external_domain#AWSCURRENT>
                 paths:
                     - /
 
