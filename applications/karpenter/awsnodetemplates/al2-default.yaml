@@ -1,8 +1,8 @@
 apiVersion: karpenter.k8s.aws/v1alpha1
 kind: AWSNodeTemplate
 metadata:
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  #finalizers:
+  #  - resources-finalizer.argocd.argoproj.io
   annotations:
     argocd.argoproj.io/sync-wave: "1"
     argocd.argoproj.io/sync-options: Prune=true
