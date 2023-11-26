@@ -35,19 +35,16 @@ spec:
     helm:
       releaseName: external-dns
       values: |
-        {
-            "provider": "aws",
-            "sources": ["service", "ingress"],
-            "policy": "sync",
-            "deploymentStrategy": {
-                "type": "Recreate",
-            },
-            "txtOwnerId": external-dns-<path:/eks/cluster/20231126/main/details#name#AWSCURRENT>, 
-            "txtSuffix": "",
-            "serviceAccount": {
-                "create": True,
-                "annotations": {
-                    "eks.amazonaws.com/role-arn": <path:/eks/cluster/20231126/main/iam/roles#external_dns#AWSCURRENT>,
-                },
-            }
-        }
+        provider: aws
+        sources:
+          - service
+          - ingress
+        policy: sync
+        deploymentStrategy:
+          type: Recreate
+        txtOwnerId: external-dns-<path:/eks/cluster/20231126/main/details#name#AWSCURRENT>
+        txtSuffix: ''
+        serviceAccount:
+          create: true
+          annotations:
+            eks.amazonaws.com/role-arn: "<path:/eks/cluster/20231126/main/iam/roles#external_dns#AWSCURRENT>"
