@@ -38,9 +38,9 @@ spec:
       values: |
         replicas: 2
         settings:
-          clusterName: <path:/eks/cluster/20231126/main/details#name#AWSCURRENT>
-          clusterEndpoint: <path:/eks/cluster/20231126/main/details#endpoint#AWSCURRENT>
+          clusterName: <path:/eks/cluster/2023112617/main/details#name#AWSCURRENT>
+          clusterEndpoint: <path:/eks/cluster/2023112617/main/details#endpoint#AWSCURRENT>
         serviceAccount:
           create: true
           annotations:
-            eks.amazonaws.com/role-arn: <path:/eks/cluster/20231126/main/iam/roles#karpenter#AWSCURRENT>
+            eks.amazonaws.com/role-arn: <path:/eks/cluster/2023112617/main/iam/roles#karpenter#AWSCURRENT>

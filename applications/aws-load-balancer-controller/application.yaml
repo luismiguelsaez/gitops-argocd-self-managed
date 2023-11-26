@@ -33,9 +33,9 @@ spec:
     helm:
       releaseName: aws-load-balancer-controller
       values: |
-        clusterName: <path:/eks/cluster/20231126/main/details#name#AWSCURRENT>
-        region: <path:/eks/cluster/20231126/main/details#region#AWSCURRENT>
+        clusterName: <path:/eks/cluster/2023112617/main/details#name#AWSCURRENT>
+        region: <path:/eks/cluster/2023112617/main/details#region#AWSCURRENT>
         serviceAccount:
           create: true
           annotations:
-            eks.amazonaws.com/role-arn: <path:/eks/cluster/20231126/main/iam/roles#aws_load_balancer_controller#AWSCURRENT>
+            eks.amazonaws.com/role-arn: <path:/eks/cluster/2023112617/main/iam/roles#aws_load_balancer_controller#AWSCURRENT>

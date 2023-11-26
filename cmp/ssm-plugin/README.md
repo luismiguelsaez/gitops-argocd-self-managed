@@ -55,7 +55,7 @@ kind: Secret
 metadata:
   name: aws-example
 stringData:
-  sample-secret: <path:/eks/cluster/20231126/main/iam/roles#karpenter#AWSCURRENT>
+  sample-secret: <path:/eks/cluster/2023112617/main/iam/roles#karpenter#AWSCURRENT>
 type: Opaque
 EOF
 ```
@@ -67,7 +67,7 @@ automountServiceAccountToken: true
 kind: ServiceAccount
 metadata:
   annotations:
-    eks.amazonaws.con/role-arn: '<path:/eks/cluster/20231126/main/iam/roles#argocd#AWSCURRENT>'
+    eks.amazonaws.con/role-arn: '<path:/eks/cluster/2023112617/main/iam/roles#argocd#AWSCURRENT>'
   name: argo-cd-argocd-repo-server
   namespace: argocd
 EOF
