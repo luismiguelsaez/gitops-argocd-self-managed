@@ -39,9 +39,8 @@ spec:
         {
             "replicas": 2,
             "settings": {
-                "aws": {},
                 "clusterName": "<path:/eks/cluster/20231126/main/details#name#AWSCURRENT>",
-                "clusterEndpoint": "<path:/eks/cluster/20231126/main/details#endpoint#AWSCURRENT>"",
+                "clusterEndpoint": "<path:/eks/cluster/20231126/main/details#endpoint#AWSCURRENT>",
             },
             "serviceAccount": {
                 "create": True,
