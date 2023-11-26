@@ -24,7 +24,12 @@ argocd app get root -o json | jq -r '.status.sync.status'
     argocd app patch root --type json --patch='[{"op": "replace", "path": "/spec/syncPolicy", "value": null}]'
     ```
 
-    - Delete app
+    - Delete apps
+    ```bash
+    argocd app delete --cascade metrics-server
+    ```
+
+    - Delete root app
     ```bash
     argocd app delete --cascade --propagation-policy foreground root
     ```
