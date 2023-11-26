@@ -101,7 +101,7 @@ spec:
                 "service.beta.kubernetes.io/aws-load-balancer-nlb-target-type": "instance",
                 "service.beta.kubernetes.io/aws-load-balancer-proxy-protocol": "*",
                 "service.beta.kubernetes.io/aws-load-balancer-scheme": "internet-facing",
-                "service.beta.kubernetes.io/aws-load-balancer-ssl-cert": "<path:/eks/cluster/2023112617/main/ingress#external_ssl_cert_arns#AWSCURRENT>",
+                "service.beta.kubernetes.io/aws-load-balancer-ssl-cert": "<path:/eks/cluster/2023112620/main/ingress#external_ssl_cert_arns#AWSCURRENT>",
                 "service.beta.kubernetes.io/aws-load-balancer-ssl-negotiation-policy": "ELBSecurityPolicy-TLS13-1-2-2021-06",
                 "service.beta.kubernetes.io/aws-load-balancer-ssl-ports": 443,
                 "service.beta.kubernetes.io/aws-load-balancer-target-group-attributes": "deregistration_delay.timeout_seconds=10,deregistration_delay.connection_termination.enabled=true",
