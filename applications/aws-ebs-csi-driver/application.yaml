@@ -35,9 +35,20 @@ spec:
     helm:
       releaseName: aws-ebs-csi-driver 
       values: |
-        clusterName: <path:/eks/cluster/20231126/main/details#name#AWSCURRENT>
-        region: <path:/eks/cluster/20231126/main/details#region#AWSCURRENT>
-        serviceAccount:
-          create: true
-          annotations:
-            eks.amazonaws.com/role-arn: <path:/eks/cluster/20231126/main/iam/roles#aws_load_balancer_controller#AWSCURRENT>
+        storageClasses:
+          - name: ebs
+            annotations:
+              storageclass.kubernetes.io/is-default-class: "true"
+            volumeBindingMode: WaitForFirstConsumer
+            reclaimPolicy: Retain
+            allowVolumeExpansion: true
+            parameters:
+              encrypted: "true"
+        controller:
+          podLabels: {}
+          replicaCount: 2
+          resources: {}
+          serviceAccount:
+            create: true
+            annotations:
+              eks.amazonaws.com/role-arn: <path:/eks/cluster/20231126/main/iam/roles#ebs_csi_driver#AWSCURRENT>
