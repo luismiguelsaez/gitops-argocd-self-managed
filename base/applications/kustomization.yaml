@@ -7,8 +7,8 @@ resources:
   - karpenter                    # Prune disabled and resources finalizer unset
   - external-dns                 # Prune disabled and resources finalizer unset
   - aws-ebs-csi-driver           # Prune disabled and resources finalizer unset
-  - cluster-autoscaler
-  - metrics-server
+  - cluster-autoscaler # Resources finalizer set
+  - metrics-server     # Resources finalizer set
 
   # Wave 1 - depends on karpenter provisioners and node templates
   - karpenter/awsnodetemplates
