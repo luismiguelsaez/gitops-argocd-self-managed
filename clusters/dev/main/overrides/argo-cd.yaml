@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-cd
+  namespace: argocd
+spec:
+  source:
+    repoURL: https://argoproj.github.io/argo-helm
+    targetRevision: 5.51.4
+    helm:
+      values: |
+        global:
+          additionalLabels:
+            app: argo-cd
+          revisionHistoryLimit: 3
+          affinity: {}
+
+        redis:
+          enabled: true
+          resources:
+            requests:
+              cpu: 500m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+
+        redis-ha:
+          enabled: false
+
+        controller:
+          replicas: 2
+
+        server:
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 2
+
+        repoServer:
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 2
+
+        applicationSet:
+          replicas: 2
