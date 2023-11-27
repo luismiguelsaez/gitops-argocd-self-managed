@@ -45,7 +45,7 @@ kubectl get nodes -o go-template='
     {{ if .metadata.labels }}
         {{ range $key, $value := .metadata.labels }}
             {{ if or ( eq $key "app" ) ( eq $key "role" ) }}
-                {{ printf "%s %s" $node_name $value }}
+                {{- printf "%s %s" $node_name $value -}}
             {{ end }}
         {{ end }}
     {{ end }}
