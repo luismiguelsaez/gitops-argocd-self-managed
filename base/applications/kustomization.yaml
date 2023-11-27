@@ -3,11 +3,11 @@ kind: Kustomization
 
 resources:
   # Wave 0 - creates basic CRDs
-  - karpenter # Used by other workloads to provision nodes
+  - aws-load-balancer-controller # Prune disabled
+  - karpenter                    # Prune disabled
+  - external-dns                 # Prune disabled
   - cluster-autoscaler
-  - aws-load-balancer-controller
   - aws-ebs-csi-driver
-  - external-dns
   - metrics-server
 
   # Wave 1 - depends on karpenter provisioners and node templates
