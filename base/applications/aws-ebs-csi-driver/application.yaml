@@ -38,7 +38,7 @@ spec:
             annotations:
               storageclass.kubernetes.io/is-default-class: "true"
             volumeBindingMode: WaitForFirstConsumer
-            reclaimPolicy: Retain
+            reclaimPolicy: Delete
             allowVolumeExpansion: true
             parameters:
               encrypted: "true"
@@ -46,6 +46,9 @@ spec:
           podLabels: {}
           replicaCount: 2
           resources: {}
+          volumeModificationFeature:
+            enabled: true
+          defaultFsType: ext4
           serviceAccount:
             create: true
             annotations:

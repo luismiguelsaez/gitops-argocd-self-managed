@@ -110,7 +110,7 @@ spec:
             memory: 2048Mi
 
         persistence:
-          enabled: true
+          enabled: false
           storageClass: ebs
           accessModes:
             - ReadWriteOnce
