@@ -38,7 +38,7 @@ spec:
             annotations:
               storageclass.kubernetes.io/is-default-class: "true"
             volumeBindingMode: WaitForFirstConsumer
-            reclaimPolicy: Delete
+            reclaimPolicy: Retain
             allowVolumeExpansion: true
             parameters:
               encrypted: "true"
