@@ -5,6 +5,7 @@ commonLabels:
   environment: dev
 
 bases:
+  - ../../../base/projects
   - ../../../base/applications
 
 patchesStrategicMerge: []
