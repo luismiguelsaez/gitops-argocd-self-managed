@@ -58,6 +58,7 @@ spec:
                       end
                     end
                   end
+                  hs.message = "Waiting for Application"
                   return hs
             # Old format
             #resource.customizations.health.argoproj.io_Application: |
