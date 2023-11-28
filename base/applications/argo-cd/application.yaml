@@ -37,14 +37,18 @@ spec:
             app: argo-cd
           revisionHistoryLimit: 3
           affinity:
+            podAntiAffinity: soft
             nodeAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-                nodeSelectorTerms:
-                  - matchExpressions:
-                      - key: app
-                        operator: In
-                        values:
-                          - argo-cd
+              type: hard
+              matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                    - argo-cd
+          topologySpreadConstraints: []
+            # - maxSkew: 1
+            #   topologyKey: topology.kubernetes.io/zone
+            #   whenUnsatisfiable: DoNotSchedule
 
         configs:
           cm:
