@@ -121,7 +121,7 @@ spec:
                           - redis
 
         redis-ha:
-          enabled: false
+          enabled: true
           persistentVolume:
               enabled: false
               storageClass: ebs
