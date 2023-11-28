@@ -36,7 +36,15 @@ spec:
           additionalLabels:
             app: argo-cd
           revisionHistoryLimit: 3
-          affinity: {}
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - argo-cd
 
         configs:
           cm:
@@ -120,7 +128,27 @@ spec:
           haproxy:
             enabled: true
             hardAntiAffinity: true
+            tolerations:
+              - key: karpenter.sh/enabled
+                operator: Exists
+                effect: NoSchedule
             additionalAffinities:
+              podantiAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  - labelSelector:
+                      matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                            - redis
+                    topologyKey: kubernetes.io/hostname
+                  - labelSelector:
+                      matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                            - redis
+                    topologyKey: topology.kubernetes.io/zone
               nodeAffinity:
                 requiredDuringSchedulingIgnoredDuringExecution:
                   nodeSelectorTerms:
@@ -129,6 +157,10 @@ spec:
                           operator: In
                           values:
                             - redis
+          tolerations:
+            - key: karpenter.sh/enabled
+              operator: Exists
+              effect: NoSchedule
           topologySpreadConstraints:
             enabled: true
             maxSkew: 1
@@ -136,6 +168,22 @@ spec:
             whenUnsatisfiable: DoNotSchedule
           hardAntiAffinity: true
           additionalAffinities:
+            podantiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - redis
+                  topologyKey: kubernetes.io/hostname
+                - labelSelector:
+                    matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - redis
+                  topologyKey: topology.kubernetes.io/zone
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
@@ -225,6 +273,22 @@ spec:
             maxReplicas: 5
 
           affinity:
+            podantiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - redis
+                  topologyKey: kubernetes.io/hostname
+                - labelSelector:
+                    matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - redis
+                  topologyKey: topology.kubernetes.io/zone
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
@@ -272,6 +336,9 @@ spec:
                 app: redis
               providerRef:
                 name: bottlerocket-default
+              taints:
+                - key: karpenter.sh/enabled
+                  effect: NoSchedule
               requirements: [
                 { key: karpenter.k8s.aws/instance-category, operator: In, values: [t]     },
                 { key: kubernetes.io/arch,                  operator: In, values: [arm64] },
