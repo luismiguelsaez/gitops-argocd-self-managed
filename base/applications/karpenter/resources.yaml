@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: karpenter-resources
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: system
+  destination:
+    namespace: cloud-controllers
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - Validate=true
+      - RespectIgnoreDifferences=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 5m
+  sources:
+    - repoURL: https://github.com/luismiguelsaez/gitops-argocd-self-managed
+      targetRevision: HEAD
+      path: base/applications/karpenter/awsnodetemplates
+      plugin: {}
+    - repoURL: https://github.com/luismiguelsaez/gitops-argocd-self-managed
+      targetRevision: HEAD
+      path: base/applications/karpenter/provisioners
+      plugin: {}
