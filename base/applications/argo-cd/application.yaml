@@ -98,7 +98,7 @@ spec:
           enabled: true
           name: redis
           podLabels:
-            app: redis
+            component: redis
           resources:
             requests:
               cpu: 500m
@@ -137,14 +137,14 @@ spec:
                 requiredDuringSchedulingIgnoredDuringExecution:
                   - labelSelector:
                       matchExpressions:
-                        - key: app
+                        - key: component
                           operator: In
                           values:
                             - redis
                     topologyKey: kubernetes.io/hostname
                   - labelSelector:
                       matchExpressions:
-                        - key: app
+                        - key: component
                           operator: In
                           values:
                             - redis
@@ -272,22 +272,25 @@ spec:
             minReplicas: 2
             maxReplicas: 5
 
+          podLabels:
+            component: repo-server
+
           affinity:
             podantiAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
                 - labelSelector:
                     matchExpressions:
-                      - key: app
+                      - key: component
                         operator: In
                         values:
-                          - redis
+                          - repo-server
                   topologyKey: kubernetes.io/hostname
                 - labelSelector:
                     matchExpressions:
-                      - key: app
+                      - key: component
                         operator: In
                         values:
-                          - redis
+                          - repo-server
                   topologyKey: topology.kubernetes.io/zone
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
