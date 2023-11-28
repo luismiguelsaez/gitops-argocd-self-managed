@@ -133,15 +133,6 @@ spec:
                 operator: Exists
                 effect: NoSchedule
             additionalAffinities:
-              podantiAffinity:
-                requiredDuringSchedulingIgnoredDuringExecution:
-                  - labelSelector:
-                      matchExpressions:
-                        - key: component
-                          operator: In
-                          values:
-                            - redis
-                    topologyKey: topology.kubernetes.io/zone
               nodeAffinity:
                 requiredDuringSchedulingIgnoredDuringExecution:
                   nodeSelectorTerms:
@@ -161,22 +152,6 @@ spec:
             whenUnsatisfiable: DoNotSchedule
           hardAntiAffinity: true
           additionalAffinities:
-            podantiAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-                - labelSelector:
-                    matchExpressions:
-                      - key: app
-                        operator: In
-                        values:
-                          - redis
-                  topologyKey: kubernetes.io/hostname
-                - labelSelector:
-                    matchExpressions:
-                      - key: app
-                        operator: In
-                        values:
-                          - redis
-                  topologyKey: topology.kubernetes.io/zone
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
