@@ -40,9 +40,9 @@ spec:
         policy: sync
         deploymentStrategy:
           type: Recreate
-        txtOwnerId: external-dns-<path:/eks/cluster/20231128/main/details#name#AWSCURRENT>
+        txtOwnerId: external-dns-<path:/eks/cluster/main/details#name#AWSCURRENT>
         txtSuffix: ''
         serviceAccount:
           create: true
           annotations:
-            eks.amazonaws.com/role-arn: "<path:/eks/cluster/20231128/main/iam/roles#external_dns#AWSCURRENT>"
+            eks.amazonaws.com/role-arn: "<path:/eks/cluster/main/iam/roles#external_dns#AWSCURRENT>"

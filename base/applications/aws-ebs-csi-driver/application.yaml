@@ -52,4 +52,4 @@ spec:
           serviceAccount:
             create: true
             annotations:
-              eks.amazonaws.com/role-arn: <path:/eks/cluster/20231128/main/iam/roles#ebs_csi_driver#AWSCURRENT>
+              eks.amazonaws.com/role-arn: <path:/eks/cluster/main/iam/roles#ebs_csi_driver#AWSCURRENT>

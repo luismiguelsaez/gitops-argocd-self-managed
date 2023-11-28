@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: cluster-autoscaler
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 spec:
@@ -14,7 +12,7 @@ spec:
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
-      prune: true
+      prune: false
       selfHeal: true
       allowEmpty: false
     syncOptions:
@@ -37,12 +35,12 @@ spec:
       values: |
         replicaCount: 2
         autoDiscovery:
-          clusterName: <path:/eks/cluster/20231128/main/details#name#AWSCURRENT>
+          clusterName: <path:/eks/cluster/main/details#name#AWSCURRENT>
           roles:
             - worker
-        awsRegion: <path:/eks/cluster/20231128/main/details#region#AWSCURRENT>
+        awsRegion: <path:/eks/cluster/main/details#region#AWSCURRENT>
         rbac:
           serviceAccount:
             create: true
             annotations:
-              eks.amazonaws.com/role-arn: <path:/eks/cluster/20231128/main/iam/roles#cluster_autoscaler#AWSCURRENT>
+              eks.amazonaws.com/role-arn: <path:/eks/cluster/main/iam/roles#cluster_autoscaler#AWSCURRENT>

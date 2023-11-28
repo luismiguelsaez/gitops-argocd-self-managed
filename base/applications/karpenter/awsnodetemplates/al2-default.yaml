@@ -22,12 +22,12 @@ spec:
     httpPutResponseHopLimit: 2
     httpTokens: required
   securityGroupSelector:
-    #aws-ids: <path:/eks/cluster/20231128/main/details#security_group#AWSCURRENT>
-    aws:eks:cluster-name: <path:/eks/cluster/20231128/main/details#name#AWSCURRENT>
-    #karpenter.sh/discovery: <path:/eks/cluster/20231128/main/details#name#AWSCURRENT>
-    #kubernetes.io/cluster/<path:/eks/cluster/20231128/main/details#name#AWSCURRENT>: owned
+    #aws-ids: <path:/eks/cluster/main/details#security_group#AWSCURRENT>
+    aws:eks:cluster-name: <path:/eks/cluster/main/details#name#AWSCURRENT>
+    #karpenter.sh/discovery: <path:/eks/cluster/main/details#name#AWSCURRENT>
+    #kubernetes.io/cluster/<path:/eks/cluster/main/details#name#AWSCURRENT>: owned
   subnetSelector:
-    karpenter.sh/discovery: <path:/eks/cluster/20231128/main/details#name#AWSCURRENT>
+    karpenter.sh/discovery: <path:/eks/cluster/main/details#name#AWSCURRENT>
   userData: |
     MIME-Version: 1.0
     Content-Type: multipart/mixed; boundary="BOUNDARY"
@@ -38,7 +38,7 @@ spec:
     #!/bin/bash
     [ ! -d /home/ec2-user/.ssh ] && mkdir -p /home/ec2-user/.ssh
     chmod 0700 /home/ec2-user/.ssh
-    echo "<path:/eks/cluster/20231128/main/details#ssh_public_key#AWSCURRENT>" >> /home/ec2-user/.ssh/authorized_keys
+    echo "<path:/eks/cluster/main/details#ssh_public_key#AWSCURRENT>" >> /home/ec2-user/.ssh/authorized_keys
     chmod 0600 /home/ec2-user/.ssh/authorized_keys
     chown -R ec2-user.ec2-user /home/ec2-user
 
