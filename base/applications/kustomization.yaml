@@ -2,7 +2,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  # Wave 0 - creates basic CRDs
+  # Wave 0 - reserverd for projects
+
+  # Wave 1 - creates basic CRDs
   # Prune disabled and resources finalizer unset
   - aws-load-balancer-controller
   - karpenter
@@ -11,14 +13,14 @@ resources:
   - cluster-autoscaler
   - metrics-server
 
-  # Wave 1 - depends on karpenter provisioners and node templates
+  # Wave 2 - depends on karpenter provisioners and node templates
   #- karpenter/awsnodetemplates
   #- karpenter/provisioners
   #- prometheus-stack # Creates ServiceMonitor, PodMonitor, ... used by other workloads
   - ingress/nginx/external
 
-  # Wave 3
+  # Wave 4
   - argo-cd
 
-  # Wave 4 - depends on ingress/alb, prom/serviceMonitor, EBS CSI driver
+  # Wave 5 - depends on ingress/alb, prom/serviceMonitor, EBS CSI driver
   #- opensearch
