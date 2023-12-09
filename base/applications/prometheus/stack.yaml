@@ -64,10 +64,11 @@ spec:
               providerRef:
                 name: al2-default
               requirements: [
-                { key: karpenter.k8s.aws/instance-category, operator: In, values: [t]         },
-                { key: kubernetes.io/arch,                  operator: In, values: [arm64]     },
-                { key: karpenter.sh/capacity-type,          operator: In, values: [on-demand] },
-                { key: kubernetes.io/os,                    operator: In, values: [linux] }
+                { key: karpenter.k8s.aws/instance-category, operator: In, values: [t]               },
+                { key: kubernetes.io/arch,                  operator: In, values: [arm64]           },
+                { key: karpenter.sh/capacity-type,          operator: In, values: [spot, on-demand] },
+                { key: kubernetes.io/os,                    operator: In, values: [linux]           },
+                { key: karpenter.k8s.aws/instance-memory    operator: Gt, values: ['1024']          }
               ]
 
         prometheusOperator:
