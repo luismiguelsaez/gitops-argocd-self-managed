@@ -1,0 +1,51 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pixie-operator
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: monitoring
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - Validate=true
+      - RespectIgnoreDifferences=true
+      - ServerSideApply=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 5m
+  source:
+    chart: pixie-operator-chart
+    repoURL: https://artifacts.px.dev/helm_charts/operator
+    targetRevision: 0.1.4
+    helm:
+      releaseName: pixie-operator
+      values: |
+        name: pixie
+        clusterName: <path:/eks/cluster/main/details#name#AWSCURRENT>
+        deployKey: ""
+        pod:
+          annotations: {}
+          labels: {}
+          resources:
+            limits:
+              cpu: 500m
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 1Gi
+          nodeSelector: {}
