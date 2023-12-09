@@ -292,5 +292,5 @@ spec:
         alertmanager:
             enabled: false
         nodeExporter:
-            enabled: true
+            enabled: false
 
