@@ -31,7 +31,7 @@ spec:
   source:
     chart: kube-prometheus-stack
     repoURL: https://prometheus-community.github.io/helm-charts
-    targetRevision: 54.1.0
+    targetRevision: 55.1.0
     helm:
       releaseName: prometheus-stack
       values: |
@@ -39,6 +39,9 @@ spec:
         fullnameOverride: kube-prom
         commonLabels:
             infra/app: prometheus
+
+        crds:
+        enabled: false
 
         extraManifests:
 

@@ -12,11 +12,13 @@ resources:
   - aws-ebs-csi-driver
   - cluster-autoscaler
   - metrics-server
+  # Prometheus contains the stack ( wave 2 ) and the CRDs ( wave 0 )
+  - prometheus
 
   # Wave 2 - depends on karpenter provisioners and node templates
   #- karpenter/awsnodetemplates
   #- karpenter/provisioners
-  #- prometheus-stack # Creates ServiceMonitor, PodMonitor, ... used by other workloads
+  #- prometheus # Creates ServiceMonitor, PodMonitor, ... used by other workloads
   - ingress/nginx/external
 
   # Wave 4 - depends on ingress/alb, prom/serviceMonitor, EBS CSI driver
