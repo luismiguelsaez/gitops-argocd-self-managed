@@ -37,7 +37,8 @@ spec:
       values: |
         name: pixie
         clusterName: <path:/eks/cluster/main/details#name#AWSCURRENT>
-        deployKey: ""
+        deployKey: <path:/eks/cluster/main/monitoring#pixie_deploy_key#AWSCURRENT>
+        devCloudNamespace: ""
         pod:
           annotations: {}
           labels: {}
