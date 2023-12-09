@@ -166,7 +166,7 @@ spec:
 
             # Prometheus server configuration
             prometheusSpec:
-                replicas: 1
+                replicas: 2
                 podMetadata:
                     labels:
                         infra/app: prometheus
