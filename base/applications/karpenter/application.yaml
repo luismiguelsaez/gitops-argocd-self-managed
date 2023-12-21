@@ -19,7 +19,7 @@ spec:
       - CreateNamespace=true
       - Validate=true
       - RespectIgnoreDifferences=true
-      - ServerSideApply=true
+      - ServerSideApply=false
     retry:
       limit: 10
       backoff:
@@ -29,7 +29,7 @@ spec:
   source:
     chart: karpenter
     repoURL: public.ecr.aws/karpenter
-    targetRevision: v0.33.1
+    targetRevision: v0.32.4
     path: '' 
     helm:
       releaseName: karpenter
