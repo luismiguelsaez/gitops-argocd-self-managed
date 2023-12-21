@@ -29,16 +29,19 @@ spec:
   source:
     chart: karpenter
     repoURL: public.ecr.aws/karpenter
-    targetRevision: v0.32.1
+    targetRevision: v0.32.4
     path: '' 
     helm:
       releaseName: karpenter
       values: |
         replicas: 2
-        settings:
-          clusterName: <path:/eks/cluster/main/details#name#AWSCURRENT>
-          clusterEndpoint: <path:/eks/cluster/main/details#endpoint#AWSCURRENT>
         serviceAccount:
           create: true
           annotations:
             eks.amazonaws.com/role-arn: <path:/eks/cluster/main/iam/roles#karpenter#AWSCURRENT>
+        settings:
+          clusterName: <path:/eks/cluster/main/details#name#AWSCURRENT>
+          clusterEndpoint: <path:/eks/cluster/main/details#endpoint#AWSCURRENT>
+          vmMemoryOverheadPercent: 0.075
+          featureGates:
+            drift: true
