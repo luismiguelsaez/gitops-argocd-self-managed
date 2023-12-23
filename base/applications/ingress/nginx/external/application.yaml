@@ -70,7 +70,7 @@ spec:
               "preStop": {
                 "exec": {
                   "command": [
-                    "/wait-shutdown"
+                    "sleep 30; /wait-shutdown"
                   ]
                 }
               }
