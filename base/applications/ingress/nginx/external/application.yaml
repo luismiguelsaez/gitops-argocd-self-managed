@@ -66,7 +66,16 @@ spec:
             default: false
             enabled: true
             name: nginx-external
-          kind: DaemonSet
+          kind: Deployment
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: role
+                        operator: In
+                        values:
+                          - system
           lifecycle:
             preStop:
               exec:
@@ -103,6 +112,7 @@ spec:
               service.beta.kubernetes.io/aws-load-balancer-ssl-ports: 443
               service.beta.kubernetes.io/aws-load-balancer-type: external
               service.beta.kubernetes.io/load-balancer-source-ranges: 0.0.0.0/0
+              service.beta.kubernetes.io/aws-load-balancer-target-node-labels: role=system
             enableHttp: true
             enableHttps: true
             enabled: true
