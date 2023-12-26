@@ -26,6 +26,10 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 5m
+  ignoreDifferences:
+  - group: '*'
+    kind: ConfigMap
+    name: aws-load-balancer-controller-leader
   source:
     chart: aws-load-balancer-controller
     repoURL: https://aws.github.io/eks-charts
