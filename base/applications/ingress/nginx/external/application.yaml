@@ -66,7 +66,12 @@ spec:
             default: false
             enabled: true
             name: nginx-external
-          kind: Deployment
+          kind: DaemonSet
+          minReadySeconds: 0
+          updateStrategy:
+            rollingUpdate:
+              maxUnavailable: 1
+            type: RollingUpdate
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
