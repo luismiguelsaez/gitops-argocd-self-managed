@@ -56,6 +56,7 @@ spec:
             exec.enabled: true
             admin.enabled: true
             timeout.reconciliation: 60s
+            # Enable app-of-apps
             resource.customizations: |
               argoproj.io/Application:
                 health.lua: |
@@ -72,6 +73,11 @@ spec:
                   end
                   hs.message = "Waiting for Application"
                   return hs
+            # Application controller ignore settings ( reduces CPU usage significantly )
+            resource.ignoreResourceUpdatesEnabled: "true"
+            resource.customizations.ignoreResourceUpdates.all: |
+                jsonPointers:
+                    - /status
             # Old format
             #resource.customizations.health.argoproj.io_Application: |
             #  hs = {}
