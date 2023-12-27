@@ -36,6 +36,10 @@ spec:
           additionalLabels:
             app: argo-cd
           revisionHistoryLimit: 3
+          tolerations:
+            - key: karpenter.sh/enabled
+              operator: Exists
+              effect: NoSchedule
           affinity:
             podAntiAffinity: soft
             nodeAffinity:
@@ -46,9 +50,9 @@ spec:
                   values:
                     - argo-cd
           topologySpreadConstraints: []
-            # - maxSkew: 1
-            #   topologyKey: topology.kubernetes.io/zone
-            #   whenUnsatisfiable: DoNotSchedule
+            - maxSkew: 1
+              topologyKey: topology.kubernetes.io/zone
+              whenUnsatisfiable: DoNotSchedule
 
         configs:
           cm:
@@ -176,7 +180,14 @@ spec:
                           - redis
 
         controller:
+
           replicas: 2
+
+          topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: topology.kubernetes.io/zone
+              whenUnsatisfiable: DoNotSchedule
+
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
@@ -188,10 +199,12 @@ spec:
                           - argo-cd
 
         server:
+
           autoscaling:
             enabled: true
             minReplicas: 2
             maxReplicas: 4
+
           ingress:
             enabled: true
             ingressClassName: nginx-external
@@ -202,6 +215,21 @@ spec:
             pathType: Prefix
             extraPaths: []
             tls: []
+
+          topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: topology.kubernetes.io/zone
+              whenUnsatisfiable: DoNotSchedule
+
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                          - argo-cd
 
         repoServer:
 
@@ -257,23 +285,12 @@ spec:
           podLabels:
             component: repo-server
 
+          topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: topology.kubernetes.io/zone
+              whenUnsatisfiable: DoNotSchedule
+
           affinity:
-            podantiAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-                - labelSelector:
-                    matchExpressions:
-                      - key: component
-                        operator: In
-                        values:
-                          - repo-server
-                  topologyKey: kubernetes.io/hostname
-                - labelSelector:
-                    matchExpressions:
-                      - key: component
-                        operator: In
-                        values:
-                          - repo-server
-                  topologyKey: topology.kubernetes.io/zone
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
