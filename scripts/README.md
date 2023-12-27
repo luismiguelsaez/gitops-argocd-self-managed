@@ -1,3 +1,27 @@
+## EKS cluster management
+
+### Upgrade cluster
+
+- Cluster version
+
+```bash
+aws --profile dev eks update-cluster-version --name "main" --kubernetes-version "1.28"
+aws --profile dev eks list-updates --name "main"
+aws --profile dev eks describe-update --name "main" --update-id "94de69c1-9486-4e77-802b-99f56edad178"
+```
+
+- Nodegroups
+
+```bash
+aws --profile dev eks list-nodegroups --cluster-name main
+aws --profile dev eks update-nodegroup-version --cluster-name main --nodegroup-name main-system
+```
+
+- Check events
+
+```bash
+kubectl events -A -w
+```
 
 ## ArgoCD management
 
