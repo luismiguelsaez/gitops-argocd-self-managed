@@ -1,0 +1,6 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  # Wave 5 - reserverd for apps or services depending on `infra` apps
+  - bitnami-nginx

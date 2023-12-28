@@ -7,6 +7,8 @@ commonLabels:
 bases:
   - ../../../base/infra/projects
   - ../../../base/infra/applications
+  - ../../../base/services/projects
+  - ../../../base/services/applications
 
 patchesStrategicMerge: []
   #- overrides/argo-cd.yaml
