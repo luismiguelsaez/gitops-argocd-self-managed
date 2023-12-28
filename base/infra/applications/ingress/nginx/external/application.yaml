@@ -97,28 +97,33 @@ spec:
           priorityClassName: system-node-critical
           service:
             annotations:
+              # General
+              service.beta.kubernetes.io/aws-load-balancer-name: k8s-external
+              service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+              service.beta.kubernetes.io/aws-load-balancer-type: external
+              service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 300
+              service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
               service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: eks-cluster-name=main,ingress-name=ingress-nginx-internet-facing
               service.beta.kubernetes.io/aws-load-balancer-attributes: load_balancing.cross_zone.enabled=true
+              # Target group
               service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: deregistration_delay.timeout_seconds=10,deregistration_delay.connection_termination.enabled=true
+              service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: instance
+              service.beta.kubernetes.io/aws-load-balancer-target-node-labels: role=system
               service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
-              service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 300
+              # Health check
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-interval: 5
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: /healthz
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: tcp
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-timeout: 2
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-unhealthy-threshold: 2
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-healthy-threshold: 2
-              service.beta.kubernetes.io/aws-load-balancer-manage-backend-security-group-rules: true
-              service.beta.kubernetes.io/aws-load-balancer-name: k8s-external
-              service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: instance
-              service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
-              service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+              # SSL
               service.beta.kubernetes.io/aws-load-balancer-ssl-cert: <path:/eks/cluster/main/ingress#external_ssl_cert_arns#AWSCURRENT>
               service.beta.kubernetes.io/aws-load-balancer-ssl-negotiation-policy: ELBSecurityPolicy-TLS13-1-2-2021-06
               service.beta.kubernetes.io/aws-load-balancer-ssl-ports: 443
-              service.beta.kubernetes.io/aws-load-balancer-type: external
+              # Security group
+              service.beta.kubernetes.io/aws-load-balancer-manage-backend-security-group-rules: true
               service.beta.kubernetes.io/load-balancer-source-ranges: 0.0.0.0/0
-              service.beta.kubernetes.io/aws-load-balancer-target-node-labels: role=system
             enableHttp: true
             enableHttps: true
             enabled: true
