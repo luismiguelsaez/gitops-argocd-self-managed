@@ -85,7 +85,7 @@ spec:
             preStop:
               exec:
                 command:
-                  - "sleep 30; /wait-shutdown"
+                  - "/wait-shutdown"
           metrics:
             enabled: false
             prometheusRule:
