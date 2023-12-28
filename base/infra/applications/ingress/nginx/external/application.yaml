@@ -70,7 +70,6 @@ spec:
           minReadySeconds: 0
           updateStrategy:
             rollingUpdate:
-              maxSurge: 1
               maxUnavailable: 1
             type: RollingUpdate
           affinity:
