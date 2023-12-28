@@ -5,8 +5,8 @@ commonLabels:
   environment: dev
 
 bases:
-  - ../../../base/projects
-  - ../../../base/applications
+  - ../../../base/infra/projects
+  - ../../../base/infra/applications
 
 patchesStrategicMerge: []
   #- overrides/argo-cd.yaml
