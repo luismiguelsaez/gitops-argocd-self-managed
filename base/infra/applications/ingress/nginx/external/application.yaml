@@ -67,8 +67,11 @@ spec:
             default: false
             enabled: true
             name: nginx-external
-          kind: DaemonSet
+          kind: Deployment
+          replicas: 2
           minReadySeconds: 0
+          labels:
+            app: ingress-nginx
           updateStrategy:
             rollingUpdate:
               maxUnavailable: 1
@@ -78,10 +81,20 @@ spec:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
                   - matchExpressions:
-                      - key: role
-                        operator: In
-                        values:
-                          - system
+                    - key: app
+                      operator: In
+                      values:
+                      - ingress
+                podAntiAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    - labelSelector:
+                        matchLabels:
+                          app: ingress-nginx
+                      topologyKey: topology.kubernetes.io/zone
+          tolerations:
+            - effect: NoSchedule
+              key: karpenter
+              operator: Exists
           lifecycle:
             preStop:
               exec:
