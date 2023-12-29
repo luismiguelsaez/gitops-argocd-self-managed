@@ -3,4 +3,5 @@ kind: Kustomization
 
 resources:
   - al2-default.yaml
+  - al2-max-conntrack.yaml
   - bottlerocket-default.yaml
