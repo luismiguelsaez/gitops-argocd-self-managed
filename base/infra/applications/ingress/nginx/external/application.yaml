@@ -68,7 +68,7 @@ spec:
             enabled: true
             name: nginx-external
           kind: Deployment
-          replicas: 2
+          replicaCount: 2
           minReadySeconds: 0
           labels:
             app: ingress-nginx
