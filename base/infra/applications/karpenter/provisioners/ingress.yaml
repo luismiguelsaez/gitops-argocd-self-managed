@@ -10,8 +10,9 @@ spec:
     app: ingress
     karpenter: enabled
   taints:
-    - effect: NoSchedule
-      key: karpenter
+    - key: karpenter
+      value: enabled
+      effect: NoSchedule
   providerRef:
     name: al2-max-conntrack
   requirements:
