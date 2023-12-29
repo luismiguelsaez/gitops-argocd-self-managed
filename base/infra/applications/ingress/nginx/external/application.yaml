@@ -85,12 +85,12 @@ spec:
                       operator: In
                       values:
                       - ingress
-                podAntiAffinity:
-                  requiredDuringSchedulingIgnoredDuringExecution:
-                    - labelSelector:
-                        matchLabels:
-                          app: ingress-nginx
-                      topologyKey: topology.kubernetes.io/zone
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchLabels:
+                      app: ingress-nginx
+                  topologyKey: topology.kubernetes.io/zone
           tolerations:
             - effect: NoSchedule
               key: karpenter
