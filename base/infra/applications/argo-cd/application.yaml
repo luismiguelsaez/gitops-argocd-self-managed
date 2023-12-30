@@ -420,7 +420,7 @@ spec:
                 spec:
                   version: v1.0
                   init:
-                    command: [/usr/bin/bash, -c]
+                    command: [/bin/bash, -c]
                     args:
                       - |
                         helm_repos=$(helm dependencies list | tail -n +2 | awk '{print $3}' | sort | uniq);
@@ -428,7 +428,7 @@ spec:
                         rm Chart.lock
                         helm dependency build
                   generate:
-                    command: [/usr/bin/bash, -c]
+                    command: [/bin/bash, -c]
                     args:
                       - |
                         export HELM_INCLUDE_CRDS="--include-crds";
