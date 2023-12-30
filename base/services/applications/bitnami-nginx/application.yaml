@@ -30,47 +30,48 @@ spec:
     chart: nginx 
     repoURL: https://charts.bitnami.com/bitnami
     targetRevision: 15.5.1
-    helm:
-      releaseName: nginx
-      values: |
-        replicaCount: 4
-        ingress:
-          enabled: true
-          ingressClassName: nginx-external
-          hostname: nginx.dev.lokalise.cloud
-          path: /
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                  - key: app
-                    operator: In
-                    values:
-                    - nginx
-        tolerations:
-          - effect: NoSchedule
-            key: karpenter
-            operator: Exists
-        extraDeploy:
-          - apiVersion: karpenter.sh/v1alpha5
-            kind: Provisioner
-            metadata:
-              labels: {}
-              name: nginx
-            spec:
-              consolidation:
-                enabled: true
-              labels:
-                app: nginx
-                karpenter: enabled
-              taints:
-                - effect: NoSchedule
-                  key: karpenter
-              providerRef:
-                name: bottlerocket-default
-              requirements:
-                - { key: karpenter.k8s.aws/instance-category, operator: In, values: [ t ]     }
-                - { key: kubernetes.io/arch,                  operator: In, values: [ arm64 ] }
-                - { key: kubernetes.io/os,                    operator: In, values: [ linux ] }
-                - { key: karpenter.sh/capacity-type,          operator: In, values: [ spot ]  }
+    plugin:
+      env:
+        - name: HELM_VALUES
+          value: |-
+            replicaCount: 4
+            ingress:
+              enabled: true
+              ingressClassName: nginx-external
+              hostname: nginx.dev.lokalise.cloud
+              path: /
+            affinity:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                    - matchExpressions:
+                      - key: app
+                        operator: In
+                        values:
+                        - nginx
+            tolerations:
+              - effect: NoSchedule
+                key: karpenter
+                operator: Exists
+            extraDeploy:
+              - apiVersion: karpenter.sh/v1alpha5
+                kind: Provisioner
+                metadata:
+                  labels: {}
+                  name: nginx
+                spec:
+                  consolidation:
+                    enabled: true
+                  labels:
+                    app: nginx
+                    karpenter: enabled
+                  taints:
+                    - effect: NoSchedule
+                      key: karpenter
+                  providerRef:
+                    name: bottlerocket-default
+                  requirements:
+                    - { key: karpenter.k8s.aws/instance-category, operator: In, values: [ t ]     }
+                    - { key: kubernetes.io/arch,                  operator: In, values: [ arm64 ] }
+                    - { key: kubernetes.io/os,                    operator: In, values: [ linux ] }
+                    - { key: karpenter.sh/capacity-type,          operator: In, values: [ spot ]  }
