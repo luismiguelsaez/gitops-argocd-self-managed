@@ -10,5 +10,5 @@ bases:
   - ../../../base/services/projects
   - ../../../base/services/applications
 
-patchesStrategicMerge: []
-  #- overrides/argo-cd.yaml
+patchesStrategicMerge:
+  - overrides/bitnami-nginx.yaml
