@@ -258,7 +258,7 @@ spec:
                 - debug
                 - --logformat
                 - json
-              image: luismiguelsaez/argocd-cmp-default:v0.0.2
+              image: luismiguelsaez/argocd-cmp-default:v0.0.3
               securityContext:
                 runAsNonRoot: true
                 runAsUser: 999
@@ -286,7 +286,7 @@ spec:
                 - debug
                 - --logformat
                 - json
-              image: luismiguelsaez/argocd-cmp-default:v0.0.2
+              image: luismiguelsaez/argocd-cmp-default:v0.0.3
               securityContext:
                 runAsNonRoot: true
                 runAsUser: 999
