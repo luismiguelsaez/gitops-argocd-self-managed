@@ -3,33 +3,8 @@ kind: Application
 metadata:
   name: nginx
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
 spec:
-  project: apps
-  destination:
-    namespace: apps
-    server: https://kubernetes.default.svc
-  syncPolicy:
-    automated:
-      prune: false
-      selfHeal: true
-      allowEmpty: false
-    syncOptions:
-      - CreateNamespace=true
-      - Validate=true
-      - RespectIgnoreDifferences=true
-      - ServerSideApply=false
-    retry:
-      limit: 10
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 5m
   source:
-    chart: nginx 
-    repoURL: https://charts.bitnami.com/bitnami
-    targetRevision: 15.5.1
     plugin:
       env:
         - name: HELM_VALUES_OVERRIDE
