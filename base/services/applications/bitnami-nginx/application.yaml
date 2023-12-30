@@ -31,7 +31,7 @@ spec:
     repoURL: https://charts.bitnami.com/bitnami
     targetRevision: 15.5.1
     plugin:
-      name: cmp-helm-aws-secretsmanager
+      #name: cmp-helm-aws-secretsmanager
       env:
         - name: HELM_VALUES
           value: |-
