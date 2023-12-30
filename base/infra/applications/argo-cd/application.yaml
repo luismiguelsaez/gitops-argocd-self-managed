@@ -244,6 +244,9 @@ spec:
             - name: cmp-kustomize-aws-secretsmanager
               configMap:
                 name: cmp-kustomize-aws-secretsmanager
+            - name: cmp-helm-aws-secretsmanager
+              configMap:
+                name: cmp-helm-aws-secretsmanager
             - name: cmp-tmp
               emptyDir: {}
           extraContainers:
@@ -268,6 +271,34 @@ spec:
                 - mountPath: /home/argocd/cmp-server/config/plugin.yaml
                   subPath: plugin.yaml
                   name: cmp-kustomize-aws-secretsmanager
+                - mountPath: /tmp
+                  name: cmp-tmp
+              env:
+                - name: AVP_TYPE
+                  value: awssecretsmanager
+                - name: HOME
+                  value: /tmp
+            - name: cmp-helm-aws-secretsmanager
+              command:
+                - "/var/run/argocd/argocd-cmp-server"
+              args:
+                - --loglevel
+                - debug
+                - --logformat
+                - json
+              image: luismiguelsaez/argocd-cmp-default:v0.0.2
+              securityContext:
+                runAsNonRoot: true
+                runAsUser: 999
+                runAsGroup: 999
+              volumeMounts:
+                - mountPath: /var/run/argocd
+                  name: var-files
+                - mountPath: /home/argocd/cmp-server/plugins
+                  name: plugins
+                - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+                  subPath: plugin.yaml
+                  name: cmp-helm-aws-secretsmanager
                 - mountPath: /tmp
                   name: cmp-tmp
               env:
