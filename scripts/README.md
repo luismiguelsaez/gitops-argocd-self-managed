@@ -72,3 +72,15 @@ kubectl get nodes -o go-template='
     {{ end }}
 {{ end }}'
 ```
+
+## Cluster cleanup
+
+### Karpenter nodes
+
+After cluster removal, there could be some Karpenter nodes still running, so we would need to remove them
+
+```bash
+IDS=($(aws --profile dev ec2 describe-instances --filter "Name=tag:karpenter.sh/managed-by,Values=main" --query 'Reservations[].Instances[].[InstanceId]' --output text | tr '\n' ' '))
+
+for ID in ${IDS[@]}; do echo "Deleting instance $ID"; aws --profile dev ec2 terminate-instances --instance-ids "$ID"; done
+```
