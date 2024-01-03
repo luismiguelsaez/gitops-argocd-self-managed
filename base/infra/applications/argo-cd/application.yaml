@@ -82,8 +82,8 @@ spec:
             resource.customizations.ignoreResourceUpdates.all: |
                 jsonPointers:
                     - /status
-            resource.compareoptions: |
-                ignoreResourceStatusField: all
+            #resource.compareoptions: |
+            #    ignoreResourceStatusField: all
             # Old format
             #resource.customizations.health.argoproj.io_Application: |
             #  hs = {}
