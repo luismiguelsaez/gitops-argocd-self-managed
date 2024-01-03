@@ -26,6 +26,9 @@ spec:
       server: https://kubernetes.default.svc
   orphanedResources:
     warn: true
+    ignore:
+    - kind: TargetGroupBinding
+    - kind: ConfigMap
   roles: []
   #syncWindows:
   #  - kind: allow
