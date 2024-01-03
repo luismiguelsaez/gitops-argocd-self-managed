@@ -122,7 +122,7 @@ spec:
               service.beta.kubernetes.io/aws-load-balancer-type: external
               service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 300
               service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
-              service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: eks-cluster-name=main,ingress-name=ingress-nginx-internet-facing
+              service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: eks-cluster-name=main,ingress-name=ingress-nginx-external
               service.beta.kubernetes.io/aws-load-balancer-attributes: load_balancing.cross_zone.enabled=true
               # Target group
               service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: deregistration_delay.timeout_seconds=10,deregistration_delay.connection_termination.enabled=true
