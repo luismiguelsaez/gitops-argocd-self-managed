@@ -39,6 +39,7 @@ spec:
             replicaCount: 4
             service:
               type: ClusterIP
+              annotations: {}
             ingress:
               enabled: true
               ingressClassName: nginx-external
