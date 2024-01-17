@@ -446,7 +446,9 @@ spec:
                       - |
                         # Create Helm config directory
                         mkdir -p ./.helm/config
+                        mkdir -p ./.helm/cache
                         export HELM_CONFIG_HOME=./.helm/config
+                        export XDG_CACHE_HOME=./.helm/cache
                         # Add Helm repos
                         helm_repos=$(helm dependencies list | awk 'NR > 1 && $0 != "" && $3 != "unpacked" {print $3}' | sort | uniq);
                         for repo in $helm_repos; do [ -n "$repo" ] && helm repo add $RANDOM $repo;done
@@ -459,6 +461,7 @@ spec:
                     args:
                       - |
                         export HELM_CONFIG_HOME=./.helm/config
+                        export XDG_CACHE_HOME=./.helm/cache
                         export HELM_INCLUDE_CRDS="--include-crds";
                         export HELM_EXTRA_PARAMS="";
                         if [ -n "$ARGOCD_ENV_HELM_SKIP_CRDS" ]; then
