@@ -453,7 +453,7 @@ spec:
                         helm_repos=$(helm dependencies list | awk 'NR > 1 && $0 != "" && $3 != "unpacked" {print $3}' | sort | uniq);
                         for repo in $helm_repos; do [ -n "$repo" ] && helm repo add $RANDOM $repo;done
                         # Fix for OCI charts
-                        [ ! -f Chart.lock ] && rm Chart.lock
+                        [ -f Chart.lock ] && rm Chart.lock
                         # Build Helm dependencies
                         helm dependency build --skip-refresh
                   generate:
