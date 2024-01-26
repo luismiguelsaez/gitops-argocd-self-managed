@@ -6,7 +6,7 @@ resources:
 
   # Wave 1 - creates basic CRDs
   # Prune disabled and resources finalizer unset
-  #- pixie
+  - pixie
   - aws-load-balancer-controller
   - karpenter
   - external-dns
