@@ -20,6 +20,7 @@ resources:
   #- karpenter/awsnodetemplates
   #- karpenter/provisioners
   #- prometheus # Creates ServiceMonitor, PodMonitor, ... used by other workloads
+  #- victoriametrics
   - ingress/nginx/external
 
   # Wave 4 - depends on ingress/alb, prom/serviceMonitor, EBS CSI driver

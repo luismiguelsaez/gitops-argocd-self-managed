@@ -18,6 +18,8 @@ spec:
   sourceNamespaces:
     - argocd
   destinations:
+    - namespace: vm
+      server: https://kubernetes.default.svc
     - namespace: olm
       server: https://kubernetes.default.svc
     - namespace: px-operator

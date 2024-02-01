@@ -1,0 +1,212 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vm-cluster
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: monitoring
+  destination:
+    namespace: vm
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - Validate=true
+      - RespectIgnoreDifferences=true
+      - ServerSideApply=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 5m
+  source:
+    repoURL: https://victoriametrics.github.io/helm-charts
+    targetRevision: 0.11.10
+    chart: victoria-metrics-cluster
+    helm:
+      releaseName: vm-cluster
+      values: |
+        serviceAccount:
+            create: true
+            extraLabels: {}
+            annotations: {}
+            automountToken: true
+
+        vmselect:
+            enabled: true
+            name: vmselect
+            replicaCount: 1
+            extraLabels: {}
+            resources: {}
+            tolerations:
+            - effect: NoSchedule
+              key: platform/karpenter
+              operator: Exists
+            affinity:
+                nodeAffinity:
+                    requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                        - matchExpressions:
+                        - { key: role,     operator: In, values: [ vm ]      }
+                        - { key: workload, operator: In, values: [ default ] }
+                podAntiAffinity:
+                    requiredDuringSchedulingIgnoredDuringExecution:
+                    - labelSelector:
+                        matchLabels:
+                            app: vmselect
+                            app.kubernetes.io/instance: vm-cluster
+                        topologyKey: kubernetes.io/hostname
+            topologySpreadConstraints:
+                - labelSelector:
+                    matchLabels:
+                        app: vmselect
+                        app.kubernetes.io/instance: vm-cluster
+                    maxSkew: 1
+                    topologyKey: topology.kubernetes.io/zone
+                    whenUnsatisfiable: DoNotSchedule
+                - labelSelector:
+                    matchLabels:
+                        app: vmselect
+                        app.kubernetes.io/instance: vm-cluster
+                    maxSkew: 1
+                    topologyKey: kubernetes.io/hostname
+                    whenUnsatisfiable: DoNotSchedule
+            ingress:
+                enabled: false
+                ingressClassName: nginx-internal
+                hosts:
+                    - name: vm.prod.lokalise.cloud
+                pathType: Prefix
+            serviceMonitor:
+                enabled: false
+
+        vminsert:
+            enabled: true
+            name: vminsert
+            replicaCount: 1
+            extraLabels: {}
+            extraArgs:
+                maxLabelsPerTimeseries: "30"
+                insert.maxQueueDuration: "1m0s"
+                # Increase from default ( 4 ) during metrics migration
+                maxConcurrentInserts: "8"
+            resources: {}
+            tolerations:
+                - effect: NoSchedule
+                  key: platform/karpenter
+                  operator: Exists
+            affinity:
+            nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                    - matchExpressions:
+                    - { key: role,     operator: In, values: [ vm ]      }
+                    - { key: workload, operator: In, values: [ default ] }
+            podAntiAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchLabels:
+                        app: vminsert
+                        app.kubernetes.io/instance: vm-cluster
+                    topologyKey: kubernetes.io/hostname
+            topologySpreadConstraints:
+            - labelSelector:
+                matchLabels:
+                    app: vminsert
+                    app.kubernetes.io/instance: vm-cluster
+                maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+            - labelSelector:
+                matchLabels:
+                    app: vminsert
+                    app.kubernetes.io/instance: vm-cluster
+                maxSkew: 1
+                topologyKey: kubernetes.io/hostname
+                whenUnsatisfiable: DoNotSchedule
+
+        vmstorage:
+            enabled: true
+            name: vmstorage
+            replicaCount: 1
+            extraLabels: {}
+            extraArgs:
+                dedup.minScrapeInterval: 15s
+            retentionPeriod: 1w
+            resources: {}
+            tolerations:
+                - effect: NoSchedule
+                  key: platform/karpenter
+                  operator: Exists
+            affinity:
+                nodeAffinity:
+                    requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                        - matchExpressions:
+                        - { key: role,     operator: In, values: [ vm ]      }
+                        - { key: workload, operator: In, values: [ default ] }
+                podAntiAffinity:
+                    requiredDuringSchedulingIgnoredDuringExecution:
+                    - labelSelector:
+                        matchLabels:
+                            app: vmstorage
+                            app.kubernetes.io/instance: vm-cluster
+                        topologyKey: kubernetes.io/hostname
+            topologySpreadConstraints:
+                - labelSelector:
+                    matchLabels:
+                        app: vmstorage
+                        app.kubernetes.io/instance: vm-cluster
+                    maxSkew: 1
+                    topologyKey: topology.kubernetes.io/zone
+                    whenUnsatisfiable: DoNotSchedule
+                - labelSelector:
+                    matchLabels:
+                        app: vmstorage
+                        app.kubernetes.io/instance: vm-cluster
+                    maxSkew: 1
+                    topologyKey: kubernetes.io/hostname
+                    whenUnsatisfiable: DoNotSchedule
+            persistentVolume:
+                enabled: true
+                storageClass: ebs
+                accessModes:
+                    - ReadWriteOnce
+                size: 50Gi
+
+        extraObjects:
+          - apiVersion: karpenter.sh/v1alpha5
+            kind: Provisioner
+            metadata:
+                labels: {}
+                name: vm-default
+            spec:
+                consolidation:
+                enabled: true
+                labels:
+                env: prod
+                project: plat
+                service: k8s
+                cluster: main
+                role: vm
+                workload: default
+                karpenter: enabled
+                taints:
+                - effect: NoSchedule
+                    key: platform/karpenter
+                providerRef:
+                name: al2-default 
+                requirements:
+                - { key: karpenter.k8s.aws/instance-family, operator: In, values: [ c6g ]       }
+                - { key: kubernetes.io/arch,                operator: In, values: [ arm64 ]     }
+                - { key: kubernetes.io/os,                  operator: In, values: [ linux ]     }
+                - { key: karpenter.sh/capacity-type,        operator: In, values: [ on-demand ] }
