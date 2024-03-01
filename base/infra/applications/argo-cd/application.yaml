@@ -61,22 +61,22 @@ spec:
             admin.enabled: true
             timeout.reconciliation: 60s
             # Enable app-of-apps
-            resource.customizations: |
-              argoproj.io/Application:
-                health.lua: |
-                  hs = {}
-                  hs.status = "Progressing"
-                  hs.message = ""
-                  if obj.status ~= nil then
-                    if obj.status.health ~= nil then
-                      hs.status = obj.status.health.status
-                      if obj.status.health.message ~= nil then
-                        hs.message = obj.status.health.message
-                      end
-                    end
-                  end
-                  hs.message = "Waiting for Application"
-                  return hs
+            #resource.customizations: |
+            #  argoproj.io/Application:
+            #    health.lua: |
+            #      hs = {}
+            #      hs.status = "Progressing"
+            #      hs.message = ""
+            #      if obj.status ~= nil then
+            #        if obj.status.health ~= nil then
+            #          hs.status = obj.status.health.status
+            #          if obj.status.health.message ~= nil then
+            #            hs.message = obj.status.health.message
+            #          end
+            #        end
+            #      end
+            #      hs.message = "Waiting for Application"
+            #      return hs
             # Application controller ignore settings ( reduces CPU usage significantly )
             resource.ignoreResourceUpdatesEnabled: "true"
             resource.customizations.ignoreResourceUpdates.all: |
@@ -84,21 +84,6 @@ spec:
                     - /status
             #resource.compareoptions: |
             #    ignoreResourceStatusField: all
-            # Old format
-            #resource.customizations.health.argoproj.io_Application: |
-            #  hs = {}
-            #  hs.status = "Progressing"
-            #  hs.message = ""
-            #  if obj.status ~= nil then
-            #    if obj.status.health ~= nil then
-            #      hs.status = obj.status.health.status
-            #      if obj.status.health.message ~= nil then
-            #        hs.message = obj.status.health.message
-            #      end
-            #    end
-            #  end
-            #  hs.message = "Waiting for Application"
-            #  return hs
           params:
             server.insecure: true
             server.disable.auth: false
