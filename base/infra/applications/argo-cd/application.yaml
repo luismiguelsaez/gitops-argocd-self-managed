@@ -32,6 +32,13 @@ spec:
     helm:
       releaseName: argo-cd
       values: |
+        createAggregateRoles: false
+        createClusterRoles: true
+        crds:
+          install: true
+          keep: true
+          annotations: {}
+          additionalLabels: {}
         global:
           additionalLabels:
             app: argo-cd
@@ -259,6 +266,10 @@ spec:
                           values:
                             - repo-server
                     topologyKey: topology.kubernetes.io/zone
+          clusterRoleRules:
+            enabled: false
+            rules: []
+          rbac: []
           # CMP config - BEGIN
           volumes:
             - name: cmp-kustomize-aws-secretsmanager
