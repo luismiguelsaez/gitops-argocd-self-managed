@@ -189,12 +189,12 @@ spec:
             maxReplicas: 4
           ingress:
             enabled: true
+            controller: generic
             ingressClassName: nginx-external
-            hosts:
-              - argocd<path:/eks/cluster/main/ingress#external_domain#AWSCURRENT>
-            paths:
-              - /
+            hostname: argocd<path:/eks/cluster/main/ingress#external_domain#AWSCURRENT>
+            paths: /
             pathType: Prefix
+            extraHosts: []
             extraPaths: []
             tls: []
           topologySpreadConstraints:
