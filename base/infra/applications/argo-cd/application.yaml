@@ -249,14 +249,16 @@ spec:
                         values:
                           - argo-cd
             podAntiAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-                - labelSelector:
-                    matchExpressions:
-                      - key: app
-                        operator: In
-                        values:
-                          - argo-cd
-                  topologyKey: topology.kubernetes.io/zone
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  podAffinityTerm:
+                    labelSelector:
+                      matchExpressions:
+                        - key: component
+                          operator: In
+                          values:
+                            - repo-server
+                    topologyKey: topology.kubernetes.io/zone
           # CMP config - BEGIN
           volumes:
             - name: cmp-kustomize-aws-secretsmanager
