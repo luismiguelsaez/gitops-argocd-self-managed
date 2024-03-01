@@ -36,7 +36,7 @@ spec:
       env:
         - name: HELM_VALUES
           value: |-
-            replicaCount: 4
+            replicaCount: 2
             service:
               type: ClusterIP
               annotations: {}
