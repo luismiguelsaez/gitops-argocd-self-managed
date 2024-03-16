@@ -29,7 +29,7 @@ spec:
   source:
     chart: karpenter
     repoURL: public.ecr.aws/karpenter
-    targetRevision: v0.32.4
+    targetRevision: v0.34.3
     path: '' 
     helm:
       releaseName: karpenter
