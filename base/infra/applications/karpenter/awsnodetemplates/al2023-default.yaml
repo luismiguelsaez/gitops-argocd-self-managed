@@ -8,7 +8,7 @@ metadata:
     argocd.argoproj.io/sync-options: Prune=true
   name: al2023-default
 spec:
-  amiFamily: AL2023
+  amiFamily: AL2
   blockDeviceMappings:
   - deviceName: /dev/xvda
     ebs:
@@ -29,23 +29,23 @@ spec:
   subnetSelector:
     karpenter.sh/discovery: <path:/eks/cluster/main/details#name#AWSCURRENT>
   # https://karpenter.sh/docs/concepts/nodeclasses/#al2023
-  #userData: |
-  #  MIME-Version: 1.0
-  #  Content-Type: multipart/mixed; boundary="//"
-#
-  #  --//
-  #  Content-Type: application/node.eks.aws
-#
-  #  # Karpenter Generated NodeConfig
-  #  apiVersion: node.eks.aws/v1alpha1
-  #  kind: NodeConfig
-  #  spec:
-  #    cluster:
-  #      name: <path:/eks/cluster/main/details#name#AWSCURRENT>
-  #      apiServerEndpoint: <path:/eks/cluster/main/details#endpoint#AWSCURRENT>
-  #      certificateAuthority: <path:/eks/cluster/main/details#ca_data#AWSCURRENT>
-  #      #cidr: 10.100.0.0/16
-  #    kubelet:
-  #      config:
-  #        maxPods: 110
-  #  --//--
+  userData: |
+    MIME-Version: 1.0
+    Content-Type: multipart/mixed; boundary="//"
+
+    --//
+    Content-Type: application/node.eks.aws
+
+    # Karpenter Generated NodeConfig
+    apiVersion: node.eks.aws/v1alpha1
+    kind: NodeConfig
+    spec:
+      cluster:
+        name: <path:/eks/cluster/main/details#name#AWSCURRENT>
+        apiServerEndpoint: <path:/eks/cluster/main/details#endpoint#AWSCURRENT>
+        certificateAuthority: <path:/eks/cluster/main/details#ca_data#AWSCURRENT>
+        #cidr: 10.100.0.0/16
+      kubelet:
+        config:
+          maxPods: 110
+    --//--
