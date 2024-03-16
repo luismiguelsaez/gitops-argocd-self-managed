@@ -84,3 +84,9 @@ IDS=($(aws --profile dev ec2 describe-instances --filter "Name=tag:karpenter.sh/
 
 for ID in ${IDS[@]}; do echo "Deleting instance $ID"; aws --profile dev ec2 terminate-instances --instance-ids "$ID"; done
 ```
+
+### Load balancers
+
+```bash
+aws --profile dev elbv2 describe-load-balancers | jq -r '.LoadBalancers[]|.LoadBalancerArn'
+```
