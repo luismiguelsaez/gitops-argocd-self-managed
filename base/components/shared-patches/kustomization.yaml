@@ -8,8 +8,8 @@ patches:
       - op: add
         path: /spec/syncPolicy/retry
         value:
-          limit: 10
+          limit: 20
           backoff:
             duration: 5s
             factor: 2
-            maxDuration: 10m
+            maxDuration: 30m
