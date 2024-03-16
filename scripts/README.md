@@ -89,4 +89,7 @@ for ID in ${IDS[@]}; do echo "Deleting instance $ID"; aws --profile dev ec2 term
 
 ```bash
 aws --profile dev elbv2 describe-load-balancers | jq -r '.LoadBalancers[]|.LoadBalancerArn'
+
+TG_ARNS=$(aws --profile dev elbv2 describe-target-groups | jq -r '.TargetGroups[]|select(.LoadBalancerArns|length == 0)|.TargetGroupArn')
+for ARN in ${TG_ARNS[@]}; do echo "Deleting TG $ID"; aws --profile dev elbv2 delete-target-group --target-group-arn "$ARN"; done
 ```
