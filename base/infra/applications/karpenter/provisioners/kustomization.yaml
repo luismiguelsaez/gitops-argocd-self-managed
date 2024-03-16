@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - cronjob.yaml
   - ingress.yaml
+  - argocd.yaml

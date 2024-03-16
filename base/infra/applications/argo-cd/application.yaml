@@ -355,49 +355,6 @@ spec:
           replicas: 2
 
         extraObjects:
-          - apiVersion: karpenter.sh/v1alpha5
-            kind: Provisioner
-            metadata:
-              labels:
-                app: argo-cd
-              name: argo-cd
-            spec:
-              consolidation:
-                enabled: true
-              labels:
-                app: argo-cd
-              providerRef:
-                name: bottlerocket-default
-              requirements: [
-                { key: karpenter.k8s.aws/instance-category, operator: In, values: [t]      },
-                { key: kubernetes.io/arch,                  operator: In, values: [arm64]  },
-                { key: karpenter.sh/capacity-type,          operator: In, values: [spot]   },
-                { key: kubernetes.io/os,                    operator: In, values: [linux]  },
-                { key: karpenter.k8s.aws/instance-memory,   operator: Gt, values: ['1024'] }
-              ]
-          - apiVersion: karpenter.sh/v1alpha5
-            kind: Provisioner
-            metadata:
-              labels:
-                app: redis
-              name: redis
-            spec:
-              consolidation:
-                enabled: true
-              labels:
-                app: redis
-              providerRef:
-                name: bottlerocket-default
-              taints:
-                - key: karpenter.sh/enabled
-                  effect: NoSchedule
-              requirements: [
-                { key: karpenter.k8s.aws/instance-category, operator: In, values: [t]      },
-                { key: kubernetes.io/arch,                  operator: In, values: [arm64]  },
-                { key: karpenter.sh/capacity-type,          operator: In, values: [spot]   },
-                { key: kubernetes.io/os,                    operator: In, values: [linux]  },
-                { key: karpenter.k8s.aws/instance-memory,   operator: Gt, values: ['1024'] }
-              ]
           - apiVersion: v1
             kind: ConfigMap
             metadata:
