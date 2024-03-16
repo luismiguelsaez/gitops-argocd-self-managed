@@ -43,3 +43,5 @@ spec:
           create: true
           annotations:
             eks.amazonaws.com/role-arn: <path:/eks/cluster/main/iam/roles#aws_load_balancer_controller#AWSCURRENT>
+        defaultTags:
+          cluster: <path:/eks/cluster/main/details#name#AWSCURRENT>
