@@ -45,3 +45,6 @@ spec:
             eks.amazonaws.com/role-arn: <path:/eks/cluster/main/iam/roles#aws_load_balancer_controller#AWSCURRENT>
         defaultTags:
           cluster: <path:/eks/cluster/main/details#name#AWSCURRENT>
+        controllerConfig:
+          # https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.7/deploy/configurations/#feature-gates
+          featureGates: {}
