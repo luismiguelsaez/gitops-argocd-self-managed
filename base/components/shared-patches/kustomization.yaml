@@ -5,12 +5,11 @@ patches:
   - target:
       kind: Application
     patch: |
-      - op: replace
-        path: /spec/syncPolicy
+      - op: add
+        path: /spec/syncPolicy/retry
         value:
-          retry:
-            limit: 10
-            backoff:
-              duration: 5s
-              factor: 2
-              maxDuration: 10m
+          limit: 10
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 10m
