@@ -44,7 +44,7 @@ spec:
         name: <path:/eks/cluster/main/details#name#AWSCURRENT>
         apiServerEndpoint: <path:/eks/cluster/main/details#endpoint#AWSCURRENT>
         certificateAuthority: <path:/eks/cluster/main/details#ca_data#AWSCURRENT>
-        cidr: 10.100.0.0/16
+        #cidr: 10.100.0.0/16
       kubelet:
         config:
           maxPods: 110
