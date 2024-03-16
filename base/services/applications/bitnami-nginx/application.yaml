@@ -75,7 +75,7 @@ spec:
                     - effect: NoSchedule
                       key: karpenter
                   providerRef:
-                    name: bottlerocket-default
+                    name: al2023-default
                   requirements:
                     - { key: karpenter.k8s.aws/instance-category, operator: In, values: [ t ]     }
                     - { key: kubernetes.io/arch,                  operator: In, values: [ arm64 ] }
