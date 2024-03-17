@@ -41,7 +41,7 @@ spec:
             infra/app: prometheus
 
         crds:
-        enabled: false
+            enabled: false
 
         extraManifests:
 
