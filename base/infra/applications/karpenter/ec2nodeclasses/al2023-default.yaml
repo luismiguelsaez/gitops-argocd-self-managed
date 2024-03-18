@@ -6,7 +6,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
     argocd.argoproj.io/sync-options: Prune=true
-  name: al2-default
+  name: al2023-default
 spec:
   amiFamily: AL2023
   blockDeviceMappings:
