@@ -5,4 +5,5 @@ resources:
   - al2-default.yaml
   - al2-max-conntrack.yaml
   - bottlerocket-default.yaml
-  - al2023-default.yaml
+  # Disabled until Karpenter upgrade to v0.35.x
+  #- al2023-default.yaml
