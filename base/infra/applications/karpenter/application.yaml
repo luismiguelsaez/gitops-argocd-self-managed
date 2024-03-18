@@ -34,7 +34,7 @@ spec:
     helm:
       releaseName: karpenter
       values: |
-        replicas:
+        replicas: 2
         serviceAccount:
           create: true
           annotations:
