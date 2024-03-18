@@ -1,0 +1,49 @@
+apiVersion: karpenter.k8s.aws/v1beta1
+kind: EC2NodeClass
+metadata:
+  #finalizers:
+  #  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: Prune=true
+  name: al2-max-conntrack
+spec:
+  amiFamily: AL2
+  blockDeviceMappings:
+  - deviceName: /dev/xvda
+    ebs:
+      encrypted: true
+      volumeSize: 20Gi
+      volumeType: gp3
+  instanceProfile: KarpenterNodeRole-main
+  metadataOptions:
+    httpEndpoint: enabled
+    httpProtocolIPv6: disabled
+    httpPutResponseHopLimit: 2
+    httpTokens: required
+  securityGroupSelectorTerms:
+  - tags:
+      aws:eks:cluster-name: <path:/eks/cluster/main/details#name#AWSCURRENT>
+  subnetSelectorTerms:
+  - tags:
+      karpenter.sh/discovery: <path:/eks/cluster/main/details#name#AWSCURRENT>
+  userData: |
+    MIME-Version: 1.0
+    Content-Type: multipart/mixed; boundary="BOUNDARY"
+
+    --BOUNDARY
+    Content-Type: text/x-shellscript; charset="us-ascii"
+
+    #!/bin/bash
+    [ ! -d /home/ec2-user/.ssh ] && mkdir -p /home/ec2-user/.ssh
+    chmod 0700 /home/ec2-user/.ssh
+    echo "<path:/eks/cluster/main/details#ssh_public_key#AWSCURRENT>" >> /home/ec2-user/.ssh/authorized_keys
+    chmod 0600 /home/ec2-user/.ssh/authorized_keys
+    chown -R ec2-user.ec2-user /home/ec2-user
+
+    TOTAL_MEM=$(cat /proc/meminfo | grep "MemTotal" | awk '{print $2}')
+    CONNTRACK_MAX=$(( ( $TOTAL_MEM * 1024 ) / 16384 ))
+
+    echo -e "\n# Bump conntrack max\nnet.netfilter.nf_conntrack_max = $CONNTRACK_MAX" >> /etc/sysctl.d/00-defaults.conf
+    sysctl -w net.netfilter.nf_conntrack_max=$CONNTRACK_MAX
+    --BOUNDARY--
