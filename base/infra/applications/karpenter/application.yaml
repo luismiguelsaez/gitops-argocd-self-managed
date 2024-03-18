@@ -29,6 +29,7 @@ spec:
   source:
     chart: karpenter
     repoURL: public.ecr.aws/karpenter
+    # https://karpenter.sh/v0.32/upgrading/v1beta1-migration/#upgrade-procedure
     targetRevision: v0.32.8
     path: '' 
     helm:
