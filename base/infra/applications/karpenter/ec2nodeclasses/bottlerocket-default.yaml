@@ -1,5 +1,5 @@
-apiVersion: karpenter.k8s.aws/v1alpha1
-kind: AWSNodeTemplate
+apiVersion: karpenter.k8s.aws/v1beta1
+kind: EC2NodeClass
 metadata:
   #finalizers:
   #  - resources-finalizer.argocd.argoproj.io
@@ -27,11 +27,11 @@ spec:
     httpPutResponseHopLimit: 2
     httpTokens: required
   securityGroupSelectorTerms:
-  - tags:
-      aws:eks:cluster-name: <path:/eks/cluster/main/details#name#AWSCURRENT>
+    - tags:
+        aws:eks:cluster-name: <path:/eks/cluster/main/details#name#AWSCURRENT>
   subnetSelectorTerms:
-  - tags:
-      karpenter.sh/discovery: <path:/eks/cluster/main/details#name#AWSCURRENT>
+    - tags:
+        karpenter.sh/discovery: <path:/eks/cluster/main/details#name#AWSCURRENT>
   userData: |-
     [settings.kubernetes.eviction-hard]
     "memory.available" = "12%"

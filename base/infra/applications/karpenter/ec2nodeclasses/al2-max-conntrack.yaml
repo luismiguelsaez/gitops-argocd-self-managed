@@ -22,11 +22,11 @@ spec:
     httpPutResponseHopLimit: 2
     httpTokens: required
   securityGroupSelectorTerms:
-  - tags:
-      aws:eks:cluster-name: <path:/eks/cluster/main/details#name#AWSCURRENT>
+    - tags:
+        aws:eks:cluster-name: <path:/eks/cluster/main/details#name#AWSCURRENT>
   subnetSelectorTerms:
-  - tags:
-      karpenter.sh/discovery: <path:/eks/cluster/main/details#name#AWSCURRENT>
+    - tags:
+        karpenter.sh/discovery: <path:/eks/cluster/main/details#name#AWSCURRENT>
   userData: |
     MIME-Version: 1.0
     Content-Type: multipart/mixed; boundary="BOUNDARY"
