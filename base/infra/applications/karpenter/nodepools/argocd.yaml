@@ -4,7 +4,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
     argocd.argoproj.io/sync-options: Prune=true,Delete=true
-  name: argocd
+  name: argo-cd
 spec:
   weight: 100
   disruption:
@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app: argocd
+        app: argo-cd
         karpenter: enabled
     spec:
       nodeClassRef:
