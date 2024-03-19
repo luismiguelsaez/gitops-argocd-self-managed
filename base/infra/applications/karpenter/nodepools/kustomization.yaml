@@ -5,3 +5,4 @@ resources:
   - cronjob.yaml
   - ingress.yaml
   - argocd.yaml
+  - applications.yaml
