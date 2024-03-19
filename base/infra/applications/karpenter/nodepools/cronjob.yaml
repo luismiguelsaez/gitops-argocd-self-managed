@@ -25,6 +25,6 @@ spec:
         - { key: kubernetes.io/os,                    operator: In, values: [ linux ] }
         - { key: karpenter.sh/capacity-type,          operator: In, values: [ spot ]  }
       taints:
-        - key: karpenter
-          value: enabled
+        - key: karpenter.sh/enabled
+          value: 'true'
           effect: NoSchedule

@@ -118,13 +118,9 @@ spec:
 
         nodeSelector: {}
         tolerations:
-          - key: "karpenter"
-            operator: "Exists"
-            effect: "NoSchedule"
-          - key: "app"
-            operator: "Equal"
-            value: "opensearch"
-            effect: "NoSchedule"
+          - key: karpenter.sh/enabled
+            operator: Exists
+            effect: NoSchedule
 
         labels:
           app: opensearch
@@ -180,8 +176,8 @@ spec:
                 karpenter: enabled
                 app: opensearch
               taints:
-                - key: karpenter
-                  value: enabled
+                - key: karpenter.sh/enabled
+                  value: 'true'
                   effect: NoSchedule
               providerRef:
                 name: al2-default

@@ -96,9 +96,9 @@ spec:
                       app: ingress-nginx
                   topologyKey: topology.kubernetes.io/zone
           tolerations:
-            - effect: NoSchedule
-              key: karpenter
+            - key: karpenter.sh/enabled
               operator: Exists
+              effect: NoSchedule
           lifecycle:
             preStop:
               exec:

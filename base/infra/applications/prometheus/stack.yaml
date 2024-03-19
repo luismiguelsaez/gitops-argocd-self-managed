@@ -58,8 +58,8 @@ spec:
                 karpenter: enabled
                 role: prometheus
               taints:
-                - key: karpenter
-                  value: enabled
+                - key: karpenter.sh/enabled
+                  value: 'true'
                   effect: NoSchedule
               providerRef:
                 name: al2-default
@@ -103,51 +103,6 @@ spec:
                     memory: 512Mi
 
         prometheus:
-            # Thanos service configuration. Available from chart version 52.x.x
-            thanos: {}
-            #  objectStorageConfig:
-            #    existingSecret: {}
-            #      # name: ""
-            #      # key: ""
-            #    secret: {}
-            #      # type: S3
-            #      # prefix: aws
-            #      # config:
-            #      #     bucket: lokalise-prod-plat-s3-monitoring-thanos-storage
-            #      #     endpoint: s3.eu-central-1.amazonaws.com
-            #      #     aws_sdk_auth: true
-            thanosService:
-                enabled: false
-                portName: grpc
-                port: 10901
-                targetPort: thanos-grpc
-                httpPortName: http
-                httpPort: 19191
-                targetHttpPort: thanos-http
-            thanosServiceMonitor:
-                enabled: false
-            thanosServiceExternal:
-                enabled: false
-                portName: grpc
-                port: 10901
-                targetPort: thanos-grpc
-                httpPortName: http
-                httpPort: 10902
-                targetHttpPort: thanos-http
-                annotations:
-                    service.beta.kubernetes.io/aws-load-balancer-name: prod-aws-k8s-main-thanos
-                    service.beta.kubernetes.io/aws-load-balancer-type: external
-                    service.beta.kubernetes.io/aws-load-balancer-scheme: internal
-                    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: instance
-                    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
-                    service.beta.kubernetes.io/load-balancer-source-ranges: 0.0.0.0/0
-                    service.beta.kubernetes.io/aws-load-balancer-manage-backend-security-group-rules: 'true'
-                    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: '300'
-                    service.beta.kubernetes.io/aws-load-balancer-attributes: load_balancing.cross_zone.enabled=true
-                    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: tcp
-                    service.beta.kubernetes.io/aws-load-balancer-healthcheck-timeout: '10'
-                    external-dns.alpha.kubernetes.io/hostname: thanos-sidecar.dev.lokalise.cloud
-
             ingress:
                 enabled: true
                 ingressClassName: nginx-external
@@ -194,10 +149,9 @@ spec:
                 probeNamespaceSelector: {}
 
                 tolerations:
-                    - effect: NoSchedule
-                      key: karpenter
-                      operator: Equal
-                      value: enabled
+                    - key: karpenter.sh/enabled
+                      operator: Exists
+                      effect: NoSchedule
                 affinity:
                     nodeAffinity:
                         requiredDuringSchedulingIgnoredDuringExecution:
