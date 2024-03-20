@@ -33,4 +33,56 @@ spec:
     helm:
       releaseName: kubecost
       values: |
+        global:
+          prometheus:
+            enabled: true
+          grafana:
+            enabled: true
         kubecostToken: bHVpc21pZ3VlbHNhZXo4M0BnbWFpbC5jb20=xm343yadf98
+        saml:
+          enabled: false
+        oidc:
+          enabled: false
+        ingress:
+          enabled: false
+          # className: nginx
+          labels:
+            # kubernetes.io/ingress.class: nginx
+            # kubernetes.io/tls-acme: "true"
+          annotations:
+            # kubernetes.io/ingress.class: nginx
+            # kubernetes.io/tls-acme: "true"
+          paths: ["/"]  # There's no need to route specifically to the pods-- we have an nginx deployed that handles routing
+          pathType: ImplementationSpecific
+          hosts:
+            - cost-analyzer.local
+          tls: []
+          #  - secretName: cost-analyzer-tls
+          #    hosts:
+          #      - cost-analyzer.local
+        nodeSelector:
+          role: system
+
+        # https://docs.aws.amazon.com/eks/latest/userguide/cost-monitoring.html
+        #   https://raw.githubusercontent.com/kubecost/cost-analyzer-helm-chart/develop/cost-analyzer/values-eks-cost-monitoring.yaml
+        kubecostModel:
+          image: public.ecr.aws/kubecost/cost-model
+          imagePullPolicy: Always
+          warmCache: true
+          etl: true
+          # The total number of days the ETL pipelines will build
+          # Set to 0 to disable daily ETL (not recommended)
+          etlDailyStoreDurationDays: 120
+          maxQueryConcurrency: 5
+          # utcOffset represents a timezone in hours and minutes east (+) or west (-)
+          # of UTC, itself, which is defined as +00:00.
+          # See the tz database of timezones to look up your local UTC offset:
+          # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+          utcOffset: "+00:00"
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "55Mi"
+            #limits:
+            #  cpu: "800m"
+            #  memory: "256Mi"
