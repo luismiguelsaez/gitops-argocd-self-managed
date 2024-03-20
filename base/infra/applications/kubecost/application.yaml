@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubecost
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: system
+  destination:
+    namespace: cloud-controllers
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - Validate=true
+      - RespectIgnoreDifferences=true
+      - ServerSideApply=false
+    retry:
+      limit: 10
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 5m
+  source:
+    chart: cost-analyzer
+    repoURL: https://kubecost.github.io/cost-analyzer
+    targetRevision: 2.1.1
+    helm:
+      releaseName: kubecost
+      values: |
+        kubecostToken: bHVpc21pZ3VlbHNhZXo4M0BnbWFpbC5jb20=xm343yadf98
