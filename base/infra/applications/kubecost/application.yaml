@@ -33,12 +33,32 @@ spec:
     helm:
       releaseName: kubecost
       values: |
+        kubecostToken: bHVpc21pZ3VlbHNhZXo4M0BnbWFpbC5jb20=xm343yadf98
+
         global:
           prometheus:
             enabled: true
           grafana:
-            enabled: true
-        kubecostToken: bHVpc21pZ3VlbHNhZXo4M0BnbWFpbC5jb20=xm343yadf98
+            enabled: false
+            proxy: false
+
+        pricingCsv:
+          enabled: false
+          location:
+            provider: "AWS"
+            region: "us-east-1"
+            URI: s3://kc-csv-test/pricing_schema.csv # a valid file URI
+            csvAccessCredentials: pricing-schema-access-secret
+
+        kubecostFrontend:
+          image: public.ecr.aws/kubecost/frontend
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "55Mi"
+
+
         saml:
           enabled: false
         oidc:
