@@ -7,6 +7,9 @@ metadata:
   name: applications
 spec:
   weight: 100
+  limits:
+    cpu: 8
+    memory: 128Gi 
   disruption:
     consolidationPolicy: WhenUnderutilized
   template:
