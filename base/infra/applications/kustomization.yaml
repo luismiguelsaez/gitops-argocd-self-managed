@@ -16,7 +16,7 @@ resources:
   - aws-ebs-csi-driver
   - cluster-autoscaler
   - metrics-server
-  - kubecost
+  #- kubecost
   # Prometheus contains the stack ( wave 2 ) and the CRDs ( wave 0 )
   #- prometheus
 
