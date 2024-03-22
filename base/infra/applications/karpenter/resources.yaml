@@ -26,14 +26,6 @@ spec:
         factor: 2
         maxDuration: 5m
   sources:
-    #- repoURL: https://github.com/luismiguelsaez/gitops-argocd-self-managed
-    #  targetRevision: HEAD
-    #  path: base/infra/applications/karpenter/awsnodetemplates
-    #  plugin: {}
-    #- repoURL: https://github.com/luismiguelsaez/gitops-argocd-self-managed
-    #  targetRevision: HEAD
-    #  path: base/infra/applications/karpenter/provisioners
-    #  plugin: {}
     - repoURL: https://github.com/luismiguelsaez/gitops-argocd-self-managed
       targetRevision: HEAD
       path: base/infra/applications/karpenter/ec2nodeclasses

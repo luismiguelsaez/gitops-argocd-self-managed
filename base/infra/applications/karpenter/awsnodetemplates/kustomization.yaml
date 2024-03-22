@@ -1,8 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-resources:
-  - al2-default.yaml
-  - al2-max-conntrack.yaml
-  - bottlerocket-default.yaml
-  #- al2023-default.yaml

@@ -45,31 +45,40 @@ spec:
 
         extraManifests:
 
-          - apiVersion: karpenter.sh/v1alpha5
-            kind: Provisioner
+          - apiVersion: karpenter.sh/v1beta1
+            kind: NodePool
             metadata:
-              labels:
-                app: prometheus
-              name: prometheus
+                annotations:
+                    argocd.argoproj.io/sync-wave: "1"
+                    argocd.argoproj.io/sync-options: Prune=true,Delete=true
+                name: prometheus
             spec:
-              ttlSecondsAfterEmpty: 30
-              ttlSecondsUntilExpired: 2592000
-              labels:
-                karpenter: enabled
-                role: prometheus
-              taints:
-                - key: karpenter.sh/enabled
-                  value: 'true'
-                  effect: NoSchedule
-              providerRef:
-                name: al2-default
-              requirements: [
-                { key: karpenter.k8s.aws/instance-category, operator: In, values: [t]               },
-                { key: kubernetes.io/arch,                  operator: In, values: [arm64]           },
-                { key: karpenter.sh/capacity-type,          operator: In, values: [spot, on-demand] },
-                { key: kubernetes.io/os,                    operator: In, values: [linux]           },
-                { key: karpenter.k8s.aws/instance-memory,   operator: Gt, values: ['1024']          }
-              ]
+                weight: 100
+                limits:
+                    cpu: 8
+                    memory: 32Gi
+                disruption:
+                    consolidationPolicy: WhenUnderutilized
+                template:
+                    metadata:
+                    labels:
+                        role: prometheus
+                        karpenter: enabled
+                    spec:
+                        nodeClassRef:
+                            apiVersion: karpenter.k8s.aws/v1beta1
+                            kind: EC2NodeClass
+                            name: al2023-default
+                        requirements:
+                            - { key: karpenter.k8s.aws/instance-category, operator: In, values: [ t ]                  }
+                            - { key: karpenter.k8s.aws/instance-size    , operator: In, values: [ small,medium,large ] }
+                            - { key: kubernetes.io/arch,                  operator: In, values: [ arm64 ]              }
+                            - { key: kubernetes.io/os,                    operator: In, values: [ linux ]              }
+                            - { key: karpenter.sh/capacity-type,          operator: In, values: [ spot ]               }
+                        taints:
+                            - key: karpenter.sh/enabled
+                                value: 'true'
+                                effect: NoSchedule
 
         prometheusOperator:
             enabled: true
