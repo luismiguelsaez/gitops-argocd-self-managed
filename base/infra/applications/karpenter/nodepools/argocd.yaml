@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app: argo-cd
+        role: argo-cd
         karpenter: enabled
     spec:
       nodeClassRef:
@@ -43,7 +43,7 @@ spec:
   template:
     metadata:
       labels:
-        app: redis
+        role: redis
         karpenter: enabled
     spec:
       nodeClassRef:

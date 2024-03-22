@@ -51,10 +51,10 @@ spec:
                 requiredDuringSchedulingIgnoredDuringExecution:
                   nodeSelectorTerms:
                     - matchExpressions:
-                      - key: app
+                      - key: role
                         operator: In
                         values:
-                        - applications
+                        - application
             tolerations:
               - effect: NoSchedule
                 key: karpenter.sh/enabled

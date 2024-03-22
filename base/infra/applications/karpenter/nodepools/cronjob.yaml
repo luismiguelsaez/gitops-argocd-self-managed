@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app: cronjob
+        role: cronjob
         karpenter: enabled
     spec:
       nodeClassRef:

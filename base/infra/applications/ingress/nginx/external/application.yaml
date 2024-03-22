@@ -85,7 +85,7 @@ spec:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
                   - matchExpressions:
-                    - key: app
+                    - key: role
                       operator: In
                       values:
                       - ingress

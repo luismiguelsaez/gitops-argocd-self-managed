@@ -52,7 +52,7 @@ spec:
             nodeAffinity:
               type: hard
               matchExpressions:
-                - key: app
+                - key: role
                   operator: In
                   values:
                     - argo-cd
@@ -123,7 +123,7 @@ spec:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
                   - matchExpressions:
-                      - key: app
+                      - key: role
                         operator: In
                         values:
                           - redis
@@ -149,7 +149,7 @@ spec:
                 requiredDuringSchedulingIgnoredDuringExecution:
                   nodeSelectorTerms:
                     - matchExpressions:
-                        - key: app
+                        - key: role
                           operator: In
                           values:
                             - redis
@@ -168,7 +168,7 @@ spec:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
                   - matchExpressions:
-                      - key: app
+                      - key: role
                         operator: In
                         values:
                           - redis
@@ -184,7 +184,7 @@ spec:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
                   - matchExpressions:
-                      - key: app
+                      - key: role
                         operator: In
                         values:
                           - argo-cd
@@ -213,7 +213,7 @@ spec:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
                   - matchExpressions:
-                      - key: app
+                      - key: role
                         operator: In
                         values:
                           - argo-cd
@@ -251,7 +251,7 @@ spec:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
                   - matchExpressions:
-                      - key: app
+                      - key: role
                         operator: In
                         values:
                           - argo-cd

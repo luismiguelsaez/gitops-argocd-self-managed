@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app: ingress
+        role: ingress
         karpenter: enabled
     spec:
       nodeClassRef:
