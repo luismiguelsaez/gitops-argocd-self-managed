@@ -180,9 +180,9 @@ spec:
                                   topologyKey: kubernetes.io/hostname
                     topologySpreadConstraints:
                         - labelSelector:
-                          matchLabels:
-                            infra/app: prometheus
-                            infra/component: server
+                            matchLabels:
+                                infra/app: prometheus
+                                infra/component: server
                           maxSkew: 1
                           topologyKey: topology.kubernetes.io/zone
                           whenUnsatisfiable: DoNotSchedule
