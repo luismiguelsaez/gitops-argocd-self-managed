@@ -32,229 +32,230 @@ spec:
     chart: kube-prometheus-stack
     repoURL: https://prometheus-community.github.io/helm-charts
     targetRevision: 55.1.0
-    helm:
-      releaseName: prometheus-stack
-      values: |
-        nameOverride: prometheus
-        fullnameOverride: kube-prom
-        commonLabels:
-            infra/app: prometheus
-
-        crds:
-            enabled: false
-
-        extraManifests:
-
-          - apiVersion: karpenter.sh/v1beta1
-            kind: NodePool
-            metadata:
-                annotations:
-                    argocd.argoproj.io/sync-wave: "1"
-                    argocd.argoproj.io/sync-options: Prune=true,Delete=true
-                name: prometheus
-            spec:
-                weight: 100
-                limits:
-                    cpu: 8
-                    memory: 32Gi
-                disruption:
-                    consolidationPolicy: WhenUnderutilized
-                template:
-                    metadata:
-                    labels:
-                        role: prometheus
-                        karpenter: enabled
-                    spec:
-                        nodeClassRef:
-                            apiVersion: karpenter.k8s.aws/v1beta1
-                            kind: EC2NodeClass
-                            name: al2023-default
-                        requirements:
-                            - { key: karpenter.k8s.aws/instance-category, operator: In, values: [ t ]                  }
-                            - { key: karpenter.k8s.aws/instance-size    , operator: In, values: [ small,medium,large ] }
-                            - { key: kubernetes.io/arch,                  operator: In, values: [ arm64 ]              }
-                            - { key: kubernetes.io/os,                    operator: In, values: [ linux ]              }
-                            - { key: karpenter.sh/capacity-type,          operator: In, values: [ spot ]               }
-                        taints:
-                            - key: karpenter.sh/enabled
-                                value: 'true'
-                                effect: NoSchedule
-
-        prometheusOperator:
-            enabled: true
-            namespaces:
-                releaseNamespace: true
-                additional: []
-            denyNamespaces: []
-            alertmanagerInstanceNamespaces: []
-            alertmanagerConfigNamespaces: []
-            prometheusInstanceNamespaces: []
-            thanosRulerInstanceNamespaces: []
-            kubeletService:
-                enabled: true
-            labels:
+    plugin:
+      env:
+        - name: HELM_VALUES
+          value: |-
+            nameOverride: prometheus
+            fullnameOverride: kube-prom
+            commonLabels:
                 infra/app: prometheus
-                infra/component: operator
-            podLabels:
-                infra/app: prometheus
-                infra/component: operator
-            logFormat: json
-            logLevel: info
-            nodeSelector: {}
-            serviceMonitor:
-                interval: 15s
-                scrapeTimeout: 14s
-            resources:
-                requests:
-                    cpu: 500m
-                    memory: 512Mi
-                limits:
-                    memory: 512Mi
 
-        prometheus:
-            ingress:
+            crds:
+                enabled: false
+
+            extraManifests:
+
+            - apiVersion: karpenter.sh/v1beta1
+                kind: NodePool
+                metadata:
+                    annotations:
+                        argocd.argoproj.io/sync-wave: "1"
+                        argocd.argoproj.io/sync-options: Prune=true,Delete=true
+                    name: prometheus
+                spec:
+                    weight: 100
+                    limits:
+                        cpu: 8
+                        memory: 32Gi
+                    disruption:
+                        consolidationPolicy: WhenUnderutilized
+                    template:
+                        metadata:
+                        labels:
+                            role: prometheus
+                            karpenter: enabled
+                        spec:
+                            nodeClassRef:
+                                apiVersion: karpenter.k8s.aws/v1beta1
+                                kind: EC2NodeClass
+                                name: al2023-default
+                            requirements:
+                                - { key: karpenter.k8s.aws/instance-category, operator: In, values: [ t ]                  }
+                                - { key: karpenter.k8s.aws/instance-size    , operator: In, values: [ small,medium,large ] }
+                                - { key: kubernetes.io/arch,                  operator: In, values: [ arm64 ]              }
+                                - { key: kubernetes.io/os,                    operator: In, values: [ linux ]              }
+                                - { key: karpenter.sh/capacity-type,          operator: In, values: [ spot ]               }
+                            taints:
+                                - key: karpenter.sh/enabled
+                                    value: 'true'
+                                    effect: NoSchedule
+
+            prometheusOperator:
                 enabled: true
-                ingressClassName: nginx-external
-                annotations: {}
-                hosts:
-                    - prometheus<path:/eks/cluster/main/ingress#external_domain#AWSCURRENT>
-                paths:
-                    - /
-                pathType: Prefix
-
-            serviceAccount:
-                create: false
-                name: ""
-                annotations:
-                    eks.amazonaws.com/role-arn: arn:aws:iam::053497547689:role/plat-k8s-main-thanos-storage@monitoring
-                automountServiceAccountToken: true
-
-            # Prometheus server configuration
-            prometheusSpec:
-                replicas: 2
-                podMetadata:
-                    labels:
-                        infra/app: prometheus
-                        infra/component: server
-                enableAdminAPI: true
-                apiserverConfig: {}
-                retention: 7d
-                disableCompaction: true
+                namespaces:
+                    releaseNamespace: true
+                    additional: []
+                denyNamespaces: []
+                alertmanagerInstanceNamespaces: []
+                alertmanagerConfigNamespaces: []
+                prometheusInstanceNamespaces: []
+                thanosRulerInstanceNamespaces: []
+                kubeletService:
+                    enabled: true
+                labels:
+                    infra/app: prometheus
+                    infra/component: operator
+                podLabels:
+                    infra/app: prometheus
+                    infra/component: operator
+                logFormat: json
+                logLevel: info
                 nodeSelector: {}
-                externalLabels: {}
-                # Scrape config ( add selector so it doesn't scrape any pod or service monitor )
-                scrapeInterval: 15s
-                scrapeTimeout: 14s
-                ruleNamespaceSelector: {}
-                ruleSelectorNilUsesHelmValues: false
-                ruleSelector: {}
-                serviceMonitorSelectorNilUsesHelmValues: false
-                serviceMonitorSelector: {}
-                serviceMonitorNamespaceSelector: {}
-                podMonitorSelectorNilUsesHelmValues: false
-                podMonitorNamespaceSelector: {}
-                probeSelectorNilUsesHelmValues: true
-                probeSelector: {}
-                probeNamespaceSelector: {}
-
-                tolerations:
-                    - key: karpenter.sh/enabled
-                      operator: Exists
-                      effect: NoSchedule
-                affinity:
-                    nodeAffinity:
-                        requiredDuringSchedulingIgnoredDuringExecution:
-                            nodeSelectorTerms:
-                                - matchExpressions:
-                                    - key: role
-                                      operator: In
-                                      values:
-                                        - prometheus
-                    podAntiAffinity:
-                        requiredDuringSchedulingIgnoredDuringExecution:
-                            - labelSelector:
-                                matchLabels:
-                                    infra/app: prometheus
-                                    infra/component: server
-                              topologyKey: kubernetes.io/hostname
-                topologySpreadConstraints:
-                    - labelSelector:
-                        matchLabels:
-                            infra/app: prometheus
-                            infra/component: server
-                      maxSkew: 1
-                      topologyKey: topology.kubernetes.io/zone
-                      whenUnsatisfiable: DoNotSchedule
-                    - labelSelector:
-                        matchLabels:
-                            infra/app: prometheus
-                            infra/component: server
-                      maxSkew: 1
-                      topologyKey: kubernetes.io/hostname
-                      whenUnsatisfiable: DoNotSchedule
-
-                additionalScrapeConfigsSecret:
-                    enabled: false
-                    name: prometheus-scrape-config
-                    key: prometheus_scrape_config.yaml
-
+                serviceMonitor:
+                    interval: 15s
+                    scrapeTimeout: 14s
                 resources:
                     requests:
-                        cpu: 2000m
-                        memory: 8Gi
+                        cpu: 500m
+                        memory: 512Mi
                     limits:
-                        cpu: 2000m
-                        memory: 8Gi
+                        memory: 512Mi
 
-                storageSpec:
-                    volumeClaimTemplate:
-                        spec:
-                            storageClassName: ebs
-                            accessModes: ["ReadWriteOnce"]
-                            resources:
-                                requests:
-                                    storage: 50Gi
+            prometheus:
+                ingress:
+                    enabled: true
+                    ingressClassName: nginx-external
+                    annotations: {}
+                    hosts:
+                        - prometheus<path:/eks/cluster/main/ingress#external_domain#AWSCURRENT>
+                    paths:
+                        - /
+                    pathType: Prefix
 
-        grafana:
-            enabled: true
-            ingress:
+                serviceAccount:
+                    create: false
+                    name: ""
+                    annotations:
+                        eks.amazonaws.com/role-arn: ""
+                    automountServiceAccountToken: true
+
+                # Prometheus server configuration
+                prometheusSpec:
+                    replicas: 2
+                    podMetadata:
+                        labels:
+                            infra/app: prometheus
+                            infra/component: server
+                    enableAdminAPI: true
+                    apiserverConfig: {}
+                    retention: 7d
+                    disableCompaction: true
+                    nodeSelector: {}
+                    externalLabels: {}
+                    # Scrape config ( add selector so it doesn't scrape any pod or service monitor )
+                    scrapeInterval: 15s
+                    scrapeTimeout: 14s
+                    ruleNamespaceSelector: {}
+                    ruleSelectorNilUsesHelmValues: false
+                    ruleSelector: {}
+                    serviceMonitorSelectorNilUsesHelmValues: false
+                    serviceMonitorSelector: {}
+                    serviceMonitorNamespaceSelector: {}
+                    podMonitorSelectorNilUsesHelmValues: false
+                    podMonitorNamespaceSelector: {}
+                    probeSelectorNilUsesHelmValues: true
+                    probeSelector: {}
+                    probeNamespaceSelector: {}
+
+                    tolerations:
+                        - key: karpenter.sh/enabled
+                        operator: Exists
+                        effect: NoSchedule
+                    affinity:
+                        nodeAffinity:
+                            requiredDuringSchedulingIgnoredDuringExecution:
+                                nodeSelectorTerms:
+                                    - matchExpressions:
+                                        - key: role
+                                        operator: In
+                                        values:
+                                            - prometheus
+                        podAntiAffinity:
+                            requiredDuringSchedulingIgnoredDuringExecution:
+                                - labelSelector:
+                                    matchLabels:
+                                        infra/app: prometheus
+                                        infra/component: server
+                                topologyKey: kubernetes.io/hostname
+                    topologySpreadConstraints:
+                        - labelSelector:
+                            matchLabels:
+                                infra/app: prometheus
+                                infra/component: server
+                        maxSkew: 1
+                        topologyKey: topology.kubernetes.io/zone
+                        whenUnsatisfiable: DoNotSchedule
+                        - labelSelector:
+                            matchLabels:
+                                infra/app: prometheus
+                                infra/component: server
+                        maxSkew: 1
+                        topologyKey: kubernetes.io/hostname
+                        whenUnsatisfiable: DoNotSchedule
+
+                    additionalScrapeConfigsSecret:
+                        enabled: false
+                        name: prometheus-scrape-config
+                        key: prometheus_scrape_config.yaml
+
+                    resources:
+                        requests:
+                            cpu: 2000m
+                            memory: 8Gi
+                        limits:
+                            cpu: 2000m
+                            memory: 8Gi
+
+                    storageSpec:
+                        volumeClaimTemplate:
+                            spec:
+                                storageClassName: ebs
+                                accessModes: ["ReadWriteOnce"]
+                                resources:
+                                    requests:
+                                        storage: 50Gi
+
+            grafana:
                 enabled: true
-                ingressClassName: nginx-external
-                annotations: {}
-                hosts:
-                    - grafana<path:/eks/cluster/main/ingress#external_domain#AWSCURRENT>
-                paths:
-                    - /
+                ingress:
+                    enabled: true
+                    ingressClassName: nginx-external
+                    annotations: {}
+                    hosts:
+                        - grafana<path:/eks/cluster/main/ingress#external_domain#AWSCURRENT>
+                    paths:
+                        - /
 
-        selfMonitor: true
-        thanosRuler:
-            enabled: false
-        defaultRules:
-            create: false
-            rules:
-                prometheus: true
-                prometheusOperator: true
-                configReloaders: true
-        kubeApiServer:
-            enabled: true
-        kubelet:
-            enabled: true
-        kubeProxy:
-            enabled: true
-        kubeDns:
-            enabled: true
-        kubeEtcd:
-            enabled: true
-        kubeControllerManager:
-            enabled: true
-        kubeScheduler:
-            enabled: true
-        kubeStateMetrics:
-            enabled: true
-        coreDns:
-            enabled: true
-        alertmanager:
-            enabled: false
-        nodeExporter:
-            enabled: false
+            selfMonitor: true
+            thanosRuler:
+                enabled: false
+            defaultRules:
+                create: false
+                rules:
+                    prometheus: true
+                    prometheusOperator: true
+                    configReloaders: true
+            kubeApiServer:
+                enabled: true
+            kubelet:
+                enabled: true
+            kubeProxy:
+                enabled: true
+            kubeDns:
+                enabled: true
+            kubeEtcd:
+                enabled: true
+            kubeControllerManager:
+                enabled: true
+            kubeScheduler:
+                enabled: true
+            kubeStateMetrics:
+                enabled: true
+            coreDns:
+                enabled: true
+            alertmanager:
+                enabled: false
+            nodeExporter:
+                enabled: false
 

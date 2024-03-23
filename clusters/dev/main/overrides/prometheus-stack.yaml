@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-stack
+  namespace: argocd
+spec:
+  source:
+    plugin:
+      env:
+        - name: HELM_VALUES_OVERRIDE
+          value: |-
+            prometheus:
+                ingress:
+                    hosts:
+                        - prometheus<path:/eks/cluster/main/ingress#external_domain#AWSCURRENT>
+
+                serviceAccount:
+                    create: false
+                    annotations:
+                        eks.amazonaws.com/role-arn: ""
+
+            grafana:
+                enabled: true
+                ingress:
+                    hosts:
+                        - grafana<path:/eks/cluster/main/ingress#external_domain#AWSCURRENT>
