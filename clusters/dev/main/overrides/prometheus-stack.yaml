@@ -18,6 +18,8 @@ spec:
                     create: false
                     annotations:
                         eks.amazonaws.com/role-arn: ""
+                prometheusSpec:
+                    replicas: 1
 
             grafana:
                 enabled: true
