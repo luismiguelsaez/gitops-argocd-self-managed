@@ -55,11 +55,6 @@ spec:
                     name: prometheus
                 spec:
                     weight: 100
-                    limits:
-                        cpu: 8
-                        memory: 32Gi
-                    disruption:
-                        consolidationPolicy: WhenUnderutilized
                     template:
                         metadata:
                             labels:
