@@ -6,3 +6,4 @@ resources:
   - ingress.yaml
   - argocd.yaml
   - application.yaml
+  - prometheus.yaml
