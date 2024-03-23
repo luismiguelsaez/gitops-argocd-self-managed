@@ -174,9 +174,9 @@ spec:
                         podAntiAffinity:
                             requiredDuringSchedulingIgnoredDuringExecution:
                                 - labelSelector:
-                                  matchLabels:
-                                    infra/app: prometheus
-                                    infra/component: server
+                                    matchLabels:
+                                        infra/app: prometheus
+                                        infra/component: server
                                   topologyKey: kubernetes.io/hostname
                     topologySpreadConstraints:
                         - labelSelector:
