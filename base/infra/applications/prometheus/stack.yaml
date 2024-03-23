@@ -187,9 +187,9 @@ spec:
                           topologyKey: topology.kubernetes.io/zone
                           whenUnsatisfiable: DoNotSchedule
                         - labelSelector:
-                          matchLabels:
-                            infra/app: prometheus
-                            infra/component: server
+                            matchLabels:
+                                infra/app: prometheus
+                                infra/component: server
                           maxSkew: 1
                           topologyKey: kubernetes.io/hostname
                           whenUnsatisfiable: DoNotSchedule
