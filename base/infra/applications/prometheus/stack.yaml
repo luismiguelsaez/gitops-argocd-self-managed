@@ -46,7 +46,7 @@ spec:
 
             extraManifests:
 
-            - apiVersion: karpenter.sh/v1beta1
+              - apiVersion: karpenter.sh/v1beta1
                 kind: NodePool
                 metadata:
                     annotations:
