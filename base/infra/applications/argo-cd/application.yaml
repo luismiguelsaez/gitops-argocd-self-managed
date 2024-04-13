@@ -175,6 +175,8 @@ spec:
 
         controller:
           replicas: 2
+          # Prevents initial bootstrapping from getting stack due to the controller not being able to be scheduled
+          # if it is configured to use a Karpenter `nodepool` that hasn't been yet created
           pdb:
             enabled: true
             minAvailable: 1
