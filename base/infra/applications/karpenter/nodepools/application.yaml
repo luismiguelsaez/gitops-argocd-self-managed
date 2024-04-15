@@ -24,7 +24,7 @@ spec:
         name: al2023-default
       requirements:
         - { key: karpenter.k8s.aws/instance-category, operator: In, values: [ t ]                  }
-        - { key: karpenter.k8s.aws/instance-size    , operator: In, values: [ small,medium,large ] }
+        - { key: karpenter.k8s.aws/instance-size    , operator: In, values: [ medium,large ] }
         - { key: kubernetes.io/arch,                  operator: In, values: [ arm64 ]              }
         - { key: kubernetes.io/os,                    operator: In, values: [ linux ]              }
         - { key: karpenter.sh/capacity-type,          operator: In, values: [ spot ]               }
