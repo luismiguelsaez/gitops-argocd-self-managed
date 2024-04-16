@@ -71,6 +71,11 @@ spec:
             name: nginx-external
           kind: Deployment
           replicaCount: 2
+          updateStrategy:
+            type: RollingUpdate
+            rollingUpdate:
+              maxSurge: 1
+              maxUnavailable: 0
           resources:
             requests:
               cpu: 100m
@@ -78,10 +83,6 @@ spec:
           minReadySeconds: 0
           labels:
             app: ingress-nginx
-          updateStrategy:
-            rollingUpdate:
-              maxUnavailable: 1
-            type: RollingUpdate
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
