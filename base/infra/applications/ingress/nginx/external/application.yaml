@@ -39,6 +39,8 @@ spec:
         admissionWebhooks:
           enabled: true
         controller:
+          extraArgs:
+            update-status-on-shutdown: false
           config:
             log-format-upstream: >-
               $remote_addr - $host [$time_local] "$request" $status $body_bytes_sent
