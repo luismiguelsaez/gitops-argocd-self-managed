@@ -9,6 +9,6 @@ spec:
       env:
         - name: HELM_VALUES_OVERRIDE
           value: |-
-            replicaCount: 20
+            replicaCount: 4
             ingress:
               hostname: nginx.dev.lokalise.cloud
