@@ -47,8 +47,7 @@ spec:
               "$http_referer" "$http_user_agent" $request_length $request_time
               [$proxy_upstream_name] [$proxy_alternative_upstream_name] $upstream_addr
               $upstream_response_length $upstream_response_time $upstream_status $req_id
-            no-tls-redirect-locations: '/healthz,/healthz/'
-            redirect-to-https: true
+            #no-tls-redirect-locations: '/healthz,/healthz/'
             #server-snippet: >-
             #  if ($proxy_protocol_server_port != '443'){
             #    return 301 https://$host$request_uri;
@@ -57,9 +56,10 @@ spec:
             #    return 301 https://$host$request_uri;
             #  }
             #skip-access-log-urls: '/healthz,/healthz/'
-            ssl-redirect: false
-            use-forwarded-headers: true
-            use-proxy-protocol: false
+            #redirect-to-https: true
+            #ssl-redirect: true
+            #use-forwarded-headers: true
+            #use-proxy-protocol: false
           containerPort:
             http: 80
             https: 443
