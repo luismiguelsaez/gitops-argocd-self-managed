@@ -56,7 +56,7 @@ spec:
             skip-access-log-urls: '/healthz,/healthz/'
             ssl-redirect: false
             use-forwarded-headers: true
-            use-proxy-protocol: false
+            use-proxy-protocol: true
           containerPort:
             http: 80
             https: 443
@@ -118,14 +118,13 @@ spec:
           service:
             enabled: true
             type: LoadBalancer
-            externalTrafficPolicy: Local
             annotations:
               # General
               service.beta.kubernetes.io/aws-load-balancer-name: k8s-external
               service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
               service.beta.kubernetes.io/aws-load-balancer-type: external
               service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 300
-              #service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
+              service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
               service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: eks-cluster-name=main,ingress-name=ingress-nginx-external
               service.beta.kubernetes.io/aws-load-balancer-attributes: load_balancing.cross_zone.enabled=true
               # Target group
@@ -136,7 +135,7 @@ spec:
               # Health check
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-interval: 5
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: /healthz
-              service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: http
+              service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: tcp
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-timeout: 2
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-unhealthy-threshold: 2
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-healthy-threshold: 2
