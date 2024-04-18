@@ -56,7 +56,7 @@ spec:
             #  if ($server_port != '443'){
             #    return 301 https://$host$request_uri;
             #  }
-            skip-access-log-urls: '/healthz,/healthz/'
+            #skip-access-log-urls: '/healthz,/healthz/'
             ssl-redirect: false
             use-forwarded-headers: true
             use-proxy-protocol: false
