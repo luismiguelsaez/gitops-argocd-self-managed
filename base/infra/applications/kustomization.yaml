@@ -23,7 +23,7 @@ resources:
   # Wave 2 - depends on karpenter provisioners and node templates
   #- karpenter/awsnodetemplates
   #- karpenter/provisioners
-  - prometheus # Creates ServiceMonitor, PodMonitor, ... used by other workloads
+  #∫∫- prometheus # Creates ServiceMonitor, PodMonitor, ... used by other workloads
   #- victoriametrics
   - ingress/nginx/external
 
