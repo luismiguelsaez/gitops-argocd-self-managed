@@ -47,16 +47,19 @@ spec:
               "$http_referer" "$http_user_agent" $request_length $request_time
               [$proxy_upstream_name] [$proxy_alternative_upstream_name] $upstream_addr
               $upstream_response_length $upstream_response_time $upstream_status $req_id
-            no-tls-redirect-locations: '/healthz,/healthz/'
-            redirect-to-https: true
-            server-snippet: >-
-              if ($proxy_protocol_server_port != '443'){
-                return 301 https://$host$request_uri;
-              }
-            skip-access-log-urls: '/healthz,/healthz/'
-            ssl-redirect: false
-            use-forwarded-headers: true
-            use-proxy-protocol: true
+            #no-tls-redirect-locations: '/healthz,/healthz/'
+            #server-snippet: >-
+            #  if ($proxy_protocol_server_port != '443'){
+            #    return 301 https://$host$request_uri;
+            #  }
+            #  if ($server_port != '443'){
+            #    return 301 https://$host$request_uri;
+            #  }
+            #skip-access-log-urls: '/healthz,/healthz/'
+            #redirect-to-https: true
+            #ssl-redirect: true
+            #use-forwarded-headers: true
+            #use-proxy-protocol: false
           containerPort:
             http: 80
             https: 443
@@ -118,13 +121,14 @@ spec:
           service:
             enabled: true
             type: LoadBalancer
+            externalTrafficPolicy: Local
             annotations:
               # General
               service.beta.kubernetes.io/aws-load-balancer-name: k8s-external
               service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
               service.beta.kubernetes.io/aws-load-balancer-type: external
               service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 300
-              service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
+              #service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
               service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: eks-cluster-name=main,ingress-name=ingress-nginx-external
               service.beta.kubernetes.io/aws-load-balancer-attributes: load_balancing.cross_zone.enabled=true
               # Target group
@@ -135,7 +139,7 @@ spec:
               # Health check
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-interval: 5
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: /healthz
-              service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: tcp
+              service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: http
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-timeout: 2
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-unhealthy-threshold: 2
               service.beta.kubernetes.io/aws-load-balancer-healthcheck-healthy-threshold: 2
