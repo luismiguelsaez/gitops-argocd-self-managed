@@ -49,10 +49,13 @@ spec:
               $upstream_response_length $upstream_response_time $upstream_status $req_id
             no-tls-redirect-locations: '/healthz,/healthz/'
             redirect-to-https: true
-            server-snippet: >-
-              if ($proxy_protocol_server_port != '443'){
-                return 301 https://$host$request_uri;
-              }
+            #server-snippet: >-
+            #  if ($proxy_protocol_server_port != '443'){
+            #    return 301 https://$host$request_uri;
+            #  }
+            #  if ($server_port != '443'){
+            #    return 301 https://$host$request_uri;
+            #  }
             skip-access-log-urls: '/healthz,/healthz/'
             ssl-redirect: false
             use-forwarded-headers: true
