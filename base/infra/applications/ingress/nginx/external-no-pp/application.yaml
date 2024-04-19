@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ingress-nginx-external
+  name: ingress-nginx-external-no-pp
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -34,7 +34,7 @@ spec:
     targetRevision: 4.10.0
     path: '' 
     helm:
-      releaseName: ingress-nginx-internet-facing
+      releaseName: ingress-nginx-internet-facing-no-pp
       values: |
         admissionWebhooks:
           enabled: true
@@ -63,15 +63,15 @@ spec:
           containerPort:
             http: 80
             https: 443
-          electionID: ingress-controller-external-leader
+          electionID: ingress-controller-external-no-pp-leader
           healthCheckPath: /healthz
-          ingressClass: nginx-external
+          ingressClass: nginx-external-no-pp
           ingressClassByName: true
           ingressClassResource:
-            controllerValue: k8s.io/ingress-nginx-external
+            controllerValue: k8s.io/ingress-nginx-external-no-pp
             default: false
             enabled: true
-            name: nginx-external
+            name: nginx-external-no-pp
           kind: Deployment
           replicaCount: 2
           updateStrategy:
@@ -85,7 +85,7 @@ spec:
               memory: 128Mi
           minReadySeconds: 0
           labels:
-            app: ingress-nginx
+            app: ingress-nginx-no-pp
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
@@ -99,7 +99,7 @@ spec:
               requiredDuringSchedulingIgnoredDuringExecution:
                 - labelSelector:
                     matchLabels:
-                      app: ingress-nginx
+                      app: ingress-nginx-no-pp
                   topologyKey: topology.kubernetes.io/zone
           tolerations:
             - key: karpenter.sh/enabled
@@ -124,12 +124,12 @@ spec:
             externalTrafficPolicy: Local
             annotations:
               # General
-              service.beta.kubernetes.io/aws-load-balancer-name: k8s-external
+              service.beta.kubernetes.io/aws-load-balancer-name: k8s-external-no-pp
               service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
               service.beta.kubernetes.io/aws-load-balancer-type: external
               service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 300
               #service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
-              service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: eks-cluster-name=main,ingress-name=ingress-nginx-external
+              service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: eks-cluster-name=main,ingress-name=ingress-nginx-external-no-pp
               service.beta.kubernetes.io/aws-load-balancer-attributes: load_balancing.cross_zone.enabled=true
               # Target group
               service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: deregistration_delay.timeout_seconds=10,deregistration_delay.connection_termination.enabled=true
