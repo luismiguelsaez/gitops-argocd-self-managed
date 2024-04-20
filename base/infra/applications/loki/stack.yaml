@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: loki-promtail
+  name: loki-stack
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "1"
@@ -29,29 +29,23 @@ spec:
         factor: 2
         maxDuration: 5m
   source:
-    chart: promtail 
+    chart: loki-stack 
     repoURL: https://grafana.github.io/helm-charts
-    targetRevision: 6.15.5
+    targetRevision: 2.10.2
     plugin:
       env:
         - name: HELM_VALUES
           value: |-
-            extraArgs: []
-            daemonset:
+            test_pod:
+              enabled: false
+            loki:
               enabled: true
-            configmap:
+              isDefault: true
+            promtail:
               enabled: true
-            resources:
-              limits:
-                cpu: 200m
-                memory: 128Mi
-              requests:
-                cpu: 100m
-                memory: 128Mi 
-            config:
-              enabled: true
-              logLevel: info
-              logFormat: json
-              clients:
-                - url: http://loki:3100/loki/api/v1/push
-            extraObjects: []
+              config:
+                logLevel: info
+            fluent-bit:
+              enabled: false
+            grafana:
+              enabled: false

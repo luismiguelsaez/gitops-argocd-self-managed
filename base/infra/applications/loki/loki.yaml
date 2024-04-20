@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: loki-promtail
+  name: loki
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "1"
@@ -29,29 +29,25 @@ spec:
         factor: 2
         maxDuration: 5m
   source:
-    chart: promtail 
+    chart: loki
     repoURL: https://grafana.github.io/helm-charts
-    targetRevision: 6.15.5
+    targetRevision: 6.2.0
     plugin:
       env:
         - name: HELM_VALUES
           value: |-
-            extraArgs: []
-            daemonset:
-              enabled: true
-            configmap:
-              enabled: true
-            resources:
-              limits:
-                cpu: 200m
-                memory: 128Mi
-              requests:
-                cpu: 100m
-                memory: 128Mi 
-            config:
-              enabled: true
-              logLevel: info
-              logFormat: json
-              clients:
-                - url: http://loki:3100/loki/api/v1/push
-            extraObjects: []
+            global:
+              deploymentMode: SingleBinary
+            loki:
+              configStorageType: ConfigMap
+              auth_enabled: true
+              storage:
+                type: filesystem
+                filesystem:
+                  chunks_directory: /var/loki/chunks
+                  rules_directory: /var/loki/rules
+              compactor: {}
+              analytics: {}
+              query_range: {}
+              querier: {}
+              ingester: {}
