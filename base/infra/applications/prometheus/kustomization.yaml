@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - crds.yaml
   - stack.yaml
-  #- node-exporter.yaml
+  - node-exporter.yaml
