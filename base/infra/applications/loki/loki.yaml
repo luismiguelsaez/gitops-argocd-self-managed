@@ -38,14 +38,21 @@ spec:
           value: |-
             global:
               deploymentMode: SingleBinary
+            singleBinary:
+              replicas: 0
+              autoscaling:
+                enabled: false
+                minReplicas: 1
+                maxReplicas: 1
+                targetCPUUtilizationPercentage: 80
+                targetMemoryUtilizationPercentage: 90
             loki:
+              commonConfig:
+                replication_factor: 1
               configStorageType: ConfigMap
               auth_enabled: true
               storage:
                 type: filesystem
-                filesystem:
-                  chunks_directory: /var/loki/chunks
-                  rules_directory: /var/loki/rules
               compactor: {}
               analytics: {}
               query_range: {}
