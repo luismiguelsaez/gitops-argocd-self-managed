@@ -36,24 +36,10 @@ spec:
       env:
         - name: HELM_VALUES
           value: |-
-            deploymentMode: SingleBinary
             singleBinary:
               replicas: 1
-              autoscaling:
-                enabled: false
-                minReplicas: 1
-                maxReplicas: 1
-                targetCPUUtilizationPercentage: 80
-                targetMemoryUtilizationPercentage: 90
             loki:
               commonConfig:
                 replication_factor: 1
-              configStorageType: ConfigMap
-              auth_enabled: true
               storage:
                 type: filesystem
-              compactor: {}
-              analytics: {}
-              query_range: {}
-              querier: {}
-              ingester: {}
