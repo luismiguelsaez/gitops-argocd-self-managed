@@ -36,6 +36,7 @@ spec:
       env:
         - name: HELM_VALUES
           value: |-
+            deploymentMode: SingleBinary
             singleBinary:
               replicas: 1
             loki:
