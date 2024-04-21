@@ -36,11 +36,11 @@ spec:
       env:
         - name: HELM_VALUES
           value: |-
-            deploymentMode: SingleBinary
+            deploymentMode: SingleBinary<->SimpleScalable
             loki:
               commonConfig:
                 replication_factor: 1
               storage:
                 type: filesystem
             singleBinary:
-              replicas: 0
+              replicas: 1
