@@ -43,4 +43,4 @@ spec:
               storage:
                 type: filesystem
             singleBinary:
-              replicas: 1
+              replicas: 0
