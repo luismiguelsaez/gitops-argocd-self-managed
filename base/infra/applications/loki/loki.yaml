@@ -39,7 +39,7 @@ spec:
             global:
               deploymentMode: SingleBinary
             singleBinary:
-              replicas: 0
+              replicas: 1
               autoscaling:
                 enabled: false
                 minReplicas: 1
