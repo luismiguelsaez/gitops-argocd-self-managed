@@ -36,8 +36,7 @@ spec:
       env:
         - name: HELM_VALUES
           value: |-
-            global:
-              deploymentMode: SingleBinary
+            deploymentMode: SingleBinary
             singleBinary:
               replicas: 1
               autoscaling:
