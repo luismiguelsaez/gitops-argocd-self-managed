@@ -42,9 +42,9 @@ spec:
             configmap:
               enabled: true
             tolerations:
-              - key: karpenter
-                operator: Exists
-                effect: NoSchedule
+              - key: karpenter.sh/enabled
+                operator: Equals
+                value: true
             resources:
               limits:
                 cpu: 200m
