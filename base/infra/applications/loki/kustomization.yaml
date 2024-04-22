@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - loki.yaml
   #- stack.yaml
-  #- promtail.yaml
+  - promtail.yaml
