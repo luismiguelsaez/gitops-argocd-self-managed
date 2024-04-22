@@ -107,6 +107,8 @@ spec:
               exec:
                 command:
                   - "/wait-shutdown"
+          # Make sure that the Nginx server is ready by waiting some seconds
+          minReadySeconds: 30
           metrics:
             enabled: false
             prometheusRule:
