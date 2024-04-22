@@ -41,6 +41,10 @@ spec:
               enabled: true
             configmap:
               enabled: true
+            tolerations:
+              - key: karpenter
+                operator: Exists
+                effect: NoSchedule
             resources:
               limits:
                 cpu: 200m
