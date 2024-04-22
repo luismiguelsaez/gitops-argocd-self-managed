@@ -44,7 +44,7 @@ spec:
             tolerations:
               - key: karpenter.sh/enabled
                 operator: Equal
-                value: true
+                value: "true"
                 effect: NoSchedule
             resources:
               limits:
