@@ -49,10 +49,10 @@ spec:
                   ruler: <path:/eks/cluster/main/storage#s3_bucket_loki#AWSCURRENT>
                   admin: <path:/eks/cluster/main/storage#s3_bucket_loki#AWSCURRENT>
                 s3:
-                  endpoint: s3.<path:/eks/cluster/main/details#region#AWSCURRENT>.amazonaws.com
+                  #endpoint: s3.<path:/eks/cluster/main/details#region#AWSCURRENT>.amazonaws.com
                   region: <path:/eks/cluster/main/details#region#AWSCURRENT>
-                  s3ForcePathStyle: false
-                  insecure: false
+                  #s3ForcePathStyle: false
+                  #insecure: false
               schemaConfig:
                 configs:
                   - from: 2024-01-01
@@ -69,7 +69,7 @@ spec:
                 eks.amazonaws.com/role-arn: <path:/eks/cluster/main/iam/roles#loki#AWSCURRENT>
 
             singleBinary:
-              replicas: 3
+              replicas: 0
               resources: {}
               podLabels: {}
               tolerations: []
