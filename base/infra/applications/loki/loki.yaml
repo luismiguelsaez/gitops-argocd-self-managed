@@ -89,7 +89,10 @@ spec:
               enabled: true
               resources: {}
               podLabels: {}
-              tolerations: []
+              tolerations:
+                - key: karpenter.sh/enabled
+                  operator: Exists
+                  effect: NoSchedule
               affinity:
                 nodeAffinity:
                   requiredDuringSchedulingIgnoredDuringExecution:
@@ -230,7 +233,10 @@ spec:
             chunksCache:
               enabled: false
               podLabels: {}
-              tolerations: []
+              tolerations:
+                - key: karpenter.sh/enabled
+                  operator: Exists
+                  effect: NoSchedule
               affinity: {}
               nodeSelector: {}
             ingester:
