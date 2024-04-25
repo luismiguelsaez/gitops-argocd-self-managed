@@ -37,7 +37,9 @@ spec:
         - name: HELM_VALUES
           value: |-
             deploymentMode: SimpleScalable
+
             loki:
+              podLabels: {}
               commonConfig:
                 replication_factor: 3
               storage:
@@ -53,13 +55,14 @@ spec:
                   insecure: false
               schemaConfig:
                 configs:
-                  - from: 2024-04-01
+                  - from: 2024-01-01
                     object_store: s3
                     store: tsdb
                     schema: v13
                     index:
                       prefix: index_
                       period: 24h
+
             serviceAccount:
               create: true
               annotations:
