@@ -159,6 +159,7 @@ spec:
                           topologyKey: kubernetes.io/hostname
                           whenUnsatisfiable: DoNotSchedule
 
+
                     additionalScrapeConfigsSecret:
                         enabled: false
                         name: prometheus-scrape-config

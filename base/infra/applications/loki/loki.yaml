@@ -36,7 +36,7 @@ spec:
       env:
         - name: HELM_VALUES
           value: |-
-            deploymentMode: SingleBinary<->SimpleScalable
+            deploymentMode: SimpleScalable
             loki:
               commonConfig:
                 replication_factor: 3
@@ -60,16 +60,86 @@ spec:
                     index:
                       prefix: index_
                       period: 24h
-              #storage_config:
-              #  boltdb_shipper:
-              #    active_index_directory: /data/loki/index
-              #    cache_location: /data/loki/index_cache
-              #    shared_store: s3
-              #  aws:
-              #    s3: s3://<path:/eks/cluster/main/details#region#AWSCURRENT>/<path:/eks/cluster/main/storage#s3_bucket_loki#AWSCURRENT>
-            singleBinary:
-              replicas: 3
             serviceAccount:
               create: true
               annotations:
                 eks.amazonaws.com/role-arn: <path:/eks/cluster/main/iam/roles#loki#AWSCURRENT>
+
+            singleBinary:
+              replicas: 3
+              resources: {}
+              podLabels: {}
+              tolerations: []
+              affinity: {}
+              nodeSelector: {}
+            lokiCanary:
+              resources: {}
+              tolerations: []
+              nodeSelector: {}
+            adminApi:
+              resources: {}
+              podLabels: {}
+              tolerations: []
+              affinity: {}
+              nodeSelector: {}
+            gateway:
+              resources: {}
+              podLabels: {}
+              tolerations: []
+              affinity: {}
+              nodeSelector: {}
+            write:
+              resources: {}
+              podLabels: {}
+              tolerations: []
+              affinity: {}
+              nodeSelector: {}
+            read:
+              resources: {}
+              podLabels: {}
+              tolerations: []
+              affinity: {}
+              nodeSelector: {}
+            backend:
+              resources: {}
+              podLabels: {}
+              tolerations: []
+              affinity: {}
+              nodeSelector: {}
+            ingester:
+              resources: {}
+              podLabels: {}
+              tolerations: []
+              affinity: {}
+              nodeSelector: {}
+            distributor:
+              resources: {}
+              podLabels: {}
+              tolerations: []
+              affinity: {}
+              nodeSelector: {}
+            qurerier:
+              resources: {}
+              podLabels: {}
+              tolerations: []
+              affinity: {}
+              nodeSelector: {}
+              nodeSelector: {}
+            queryFrontend:
+              resources: {}
+              podLabels: {}
+              tolerations: []
+              affinity: {}
+              nodeSelector: {}
+            queryScheduler:
+              resources: {}
+              podLabels: {}
+              tolerations: []
+              affinity: {}
+              nodeSelector: {}
+            indexGateway:
+              resources: {}
+              podLabels: {}
+              tolerations: []
+              affinity: {}
+              nodeSelector: {}
