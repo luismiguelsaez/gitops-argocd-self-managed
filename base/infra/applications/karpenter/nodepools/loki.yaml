@@ -8,8 +8,8 @@ metadata:
 spec:
   weight: 100
   limits:
-    cpu: 8
-    memory: 64Gi
+    cpu: 16
+    memory: 128Gi
   disruption:
     consolidationPolicy: WhenUnderutilized
   template:
