@@ -36,18 +36,18 @@ spec:
       env:
         - name: HELM_VALUES
           value: |-
-            deploymentMode: SimpleScalable
+            deploymentMode: SingleBinary<->SimpleScalable
             loki:
               commonConfig:
                 replication_factor: 3
               storage:
-                type: 's3'
+                type: s3
                 bucketNames:
                   chunks: <path:/eks/cluster/main/storage#s3_bucket_loki#AWSCURRENT>
                   ruler: <path:/eks/cluster/main/storage#s3_bucket_loki#AWSCURRENT>
                   admin: <path:/eks/cluster/main/storage#s3_bucket_loki#AWSCURRENT>
                 s3:
-                  #endpoint: s3.<path:/eks/cluster/main/details#region#AWSCURRENT>.amazonaws.com
+                  endpoint: s3.<path:/eks/cluster/main/details#region#AWSCURRENT>.amazonaws.com
                   region: <path:/eks/cluster/main/details#region#AWSCURRENT>
                   s3ForcePathStyle: false
                   insecure: false
