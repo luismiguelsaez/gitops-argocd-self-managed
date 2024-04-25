@@ -7,3 +7,4 @@ resources:
   - argocd.yaml
   - application.yaml
   - prometheus.yaml
+  - loki.yaml
