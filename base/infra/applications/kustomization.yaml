@@ -18,8 +18,8 @@ resources:
   - metrics-server
   #- kubecost
   # Prometheus contains the stack ( wave 2 ) and the CRDs ( wave 0 )
-  - prometheus
-  - loki
+  #- prometheus
+  #- loki
 
   # Wave 2 - depends on karpenter provisioners and node templates
   #- karpenter/awsnodetemplates
