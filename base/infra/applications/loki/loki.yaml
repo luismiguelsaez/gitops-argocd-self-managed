@@ -39,6 +39,7 @@ spec:
             deploymentMode: SingleBinary<->SimpleScalable
 
             loki:
+              auth_enabled: false
               podLabels: {}
               commonConfig:
                 replication_factor: 3
