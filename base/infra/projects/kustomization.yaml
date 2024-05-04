@@ -6,6 +6,6 @@ resources:
   - monitoring
   - ingress
   - system
-  - secruity
+  - security
   - finops
   - devel
